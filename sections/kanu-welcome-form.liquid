@@ -64,7 +64,7 @@
   .kw__card {
     position: relative;
     z-index: 2;
-    max-width: 480px;
+    max-width: 560px;
     margin: clamp(20px, 4vw, 60px) auto 0;
     padding: 0 24px;
     text-align: center;
@@ -192,7 +192,7 @@
     {%- if section.settings.logo != blank -%}
       <img class="kw__logo" src="{{ section.settings.logo | image_url: width: 400 }}" alt="{{ shop.name }}" width="180">
     {%- else -%}
-      <div class="kw__logo" style="color: var(--kw-burgundy); font-family: var(--font-heading-family, Georgia, serif); font-size: 56px; font-style: italic; line-height: 1;">kanu</div>
+      <img class="kw__logo" src="{{ 'kanu-logo-maroon.png' | asset_url }}" alt="{{ shop.name }}" width="180">
     {%- endif -%}
 
     <div class="kw__divider"></div>
