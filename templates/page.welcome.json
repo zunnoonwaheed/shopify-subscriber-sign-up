@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "kanu_welcome": {
+      "type": "kanu-welcome-form",
+      "settings": {}
+    }
+  },
+  "order": ["kanu_welcome"]
+}
