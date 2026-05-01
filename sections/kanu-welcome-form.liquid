@@ -1,0 +1,262 @@
+{% comment %}
+  Kanu Welcome / Join the Circle form.
+  Pixel-perfect, fully responsive. Uses inline SVG ellipses so the curves
+  never crop and scale cleanly on mobile + desktop.
+  Submissions go to Shopify Admin → Customers via {% form 'customer' %}.
+{% endcomment %}
+
+{%- style -%}
+  .kw {
+    --kw-burgundy: {{ section.settings.brand_color | default: '#8a2740' }};
+    --kw-burgundy-soft: #c25a6c;
+    --kw-text: #1f1f1f;
+    position: relative;
+    background: transparent;
+    font-family: var(--font-body-family, inherit);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* ===== TOP HERO (burgundy ellipse + welcome text) ===== */
+  .kw__hero {
+    position: relative;
+    width: 100%;
+    /* Mobile-first: tall enough to fit text inside ellipse */
+    height: clamp(360px, 70vw, 560px);
+  }
+  .kw__hero-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 0;
+  }
+  .kw__hero-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: clamp(36px, 8vw, 80px) clamp(24px, 6vw, 60px) 0;
+    color: #fff;
+    z-index: 1;
+    max-width: 90%;
+  }
+  .kw__hero-text h1 {
+    font-family: var(--font-heading-family, 'Playfair Display', Georgia, serif);
+    font-weight: 500;
+    font-size: clamp(54px, 13vw, 120px);
+    line-height: 1;
+    margin: 0 0 .15em;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+  .kw__hero-text p {
+    font-family: var(--font-heading-family, 'Playfair Display', Georgia, serif);
+    font-weight: 400;
+    font-size: clamp(20px, 5.2vw, 42px);
+    margin: 0;
+    color: #fff;
+    line-height: 1.1;
+  }
+
+  /* ===== CARD (logo + form) ===== */
+  .kw__card {
+    position: relative;
+    z-index: 2;
+    max-width: 480px;
+    margin: clamp(20px, 4vw, 60px) auto 0;
+    padding: 0 24px;
+    text-align: center;
+  }
+  .kw__logo {
+    display: block;
+    margin: 0 auto;
+    max-width: 180px;
+    width: 50%;
+    height: auto;
+  }
+  .kw__divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(0,0,0,0.15);
+    margin: 18px 0 26px;
+  }
+  .kw__title {
+    font-family: var(--font-heading-family, Georgia, serif);
+    font-size: clamp(24px, 5vw, 30px);
+    font-weight: 400;
+    margin: 0 0 12px;
+    color: var(--kw-text);
+  }
+  .kw__sub {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #2a2a2a;
+    margin: 0 auto 22px;
+    max-width: 360px;
+  }
+  .kw__field {
+    width: 100%;
+    padding: 16px 18px;
+    border: 1px solid rgba(0,0,0,0.18);
+    border-radius: 10px;
+    background: #fff;
+    font-size: 15px;
+    margin-bottom: 14px;
+    box-sizing: border-box;
+    color: var(--kw-text);
+    font-family: inherit;
+    text-align: left;
+  }
+  .kw__field::placeholder { color: #6a6a6a; }
+  .kw__field:focus {
+    outline: none;
+    border-color: var(--kw-burgundy);
+    box-shadow: 0 0 0 2px rgba(138,39,64,.15);
+  }
+  .kw__btn {
+    width: 100%;
+    padding: 16px;
+    background: var(--kw-burgundy);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 4px;
+    font-family: inherit;
+    transition: opacity .2s ease;
+  }
+  .kw__btn:hover { opacity: .92; }
+  .kw__footer-note {
+    margin-top: 22px;
+    font-size: 14px;
+    color: #1f1f1f;
+    line-height: 1.5;
+  }
+  .kw__msg {
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .kw__msg--success { background: #e8f5e9; color: #1b5e20; }
+  .kw__msg--error { background: #fdecea; color: #b71c1c; }
+
+  /* ===== BOTTOM CURVE ===== */
+  .kw__bottom {
+    position: relative;
+    width: 100%;
+    margin-top: clamp(40px, 8vw, 90px);
+    line-height: 0;
+  }
+  .kw__bottom svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* ===== DESKTOP TUNING ===== */
+  @media (min-width: 750px) {
+    .kw__hero { height: 520px; }
+    .kw__hero-text { padding: 90px 0 0 70px; max-width: 560px; }
+    .kw__card { margin-top: -40px; }
+  }
+
+  @media (min-width: 1100px) {
+    .kw__hero { height: 600px; }
+  }
+{%- endstyle -%}
+
+<div class="kw">
+  {%- comment -%} Hero with inline burgundy ellipse (pixel-perfect, no cropping) {%- endcomment -%}
+  <div class="kw__hero">
+    <svg class="kw__hero-svg" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
+      <ellipse cx="0" cy="0" rx="780" ry="600" fill="{{ section.settings.brand_color | default: '#8a2740' }}"/>
+    </svg>
+    <div class="kw__hero-text">
+      <h1>{{ section.settings.heading | default: 'Welcome!' }}</h1>
+      <p>{{ section.settings.subheading | default: 'To Kanu Family' }}</p>
+    </div>
+  </div>
+
+  <div class="kw__card">
+    {%- if section.settings.logo != blank -%}
+      <img class="kw__logo" src="{{ section.settings.logo | image_url: width: 400 }}" alt="{{ shop.name }}" width="180">
+    {%- else -%}
+      <div class="kw__logo" style="color: var(--kw-burgundy); font-family: var(--font-heading-family, Georgia, serif); font-size: 56px; font-style: italic; line-height: 1;">kanu</div>
+    {%- endif -%}
+
+    <div class="kw__divider"></div>
+
+    <h2 class="kw__title">{{ section.settings.form_title | default: 'Join the Circle' }}</h2>
+    <p class="kw__sub">{{ section.settings.form_text | default: 'Be the first to know about restocks, rituals and exclusive offers.' }}</p>
+
+    {%- form 'customer', id: 'kanu-welcome-form', class: 'kw__form' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter, welcome-page">
+      <input type="hidden" name="contact[accepts_marketing]" value="true">
+
+      {%- if form.posted_successfully? -%}
+        <div class="kw__msg kw__msg--success">
+          {{ section.settings.success_text | default: 'Thanks! You are on the list.' }}
+        </div>
+      {%- endif -%}
+
+      {%- if form.errors -%}
+        <div class="kw__msg kw__msg--error">
+          {{ form.errors | default_errors }}
+        </div>
+      {%- endif -%}
+
+      <input type="text" name="contact[first_name]" class="kw__field" placeholder="Full Name" autocomplete="name" required>
+      <input type="email" name="contact[email]" class="kw__field" placeholder="Email Address" autocomplete="email" required>
+      <button type="submit" class="kw__btn">
+        {{ section.settings.button_label | default: 'Join the list' }}
+      </button>
+    {%- endform -%}
+
+    <p class="kw__footer-note">
+      {{ section.settings.footer_text | default: 'Welcome to Kanu, where heritage meet hair wellness' }}
+    </p>
+  </div>
+
+  {%- if section.settings.show_bottom_curve -%}
+    <div class="kw__bottom" aria-hidden="true">
+      <svg viewBox="0 0 1000 120" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="kw-bottom-grad-{{ section.id }}" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="{{ section.settings.brand_color | default: '#8a2740' }}" stop-opacity="0.55"/>
+            <stop offset="50%" stop-color="{{ section.settings.brand_color | default: '#8a2740' }}"/>
+            <stop offset="100%" stop-color="{{ section.settings.brand_color | default: '#8a2740' }}" stop-opacity="0.55"/>
+          </linearGradient>
+        </defs>
+        <path d="M0,120 Q500,-40 1000,120 Z" fill="url(#kw-bottom-grad-{{ section.id }})"/>
+      </svg>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Kanu Welcome Form",
+  "tag": "section",
+  "class": "section-kanu-welcome",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Hero heading", "default": "Welcome!" },
+    { "type": "text", "id": "subheading", "label": "Hero subheading", "default": "To Kanu Family" },
+    { "type": "image_picker", "id": "logo", "label": "Logo (optional)" },
+    { "type": "text", "id": "form_title", "label": "Form title", "default": "Join the Circle" },
+    { "type": "textarea", "id": "form_text", "label": "Form description", "default": "Be the first to know about restocks, rituals and exclusive offers." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Join the list" },
+    { "type": "text", "id": "footer_text", "label": "Footer text", "default": "Welcome to Kanu, where heritage meet hair wellness" },
+    { "type": "text", "id": "success_text", "label": "Success message", "default": "Thanks! You are on the list." },
+    { "type": "color", "id": "brand_color", "label": "Brand color", "default": "#8a2740" },
+    { "type": "checkbox", "id": "show_bottom_curve", "label": "Show bottom curve", "default": true }
+  ],
+  "presets": [
+    { "name": "Kanu Welcome Form" }
+  ]
+}
+{% endschema %}
