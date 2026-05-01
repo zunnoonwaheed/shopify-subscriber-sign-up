@@ -1,0 +1,668 @@
+<section class="rr-heritage {% if section.settings.section_full_width %}rr-heritage--full{% endif %} {% if section.settings.card_bg_image != blank %}rr-heritage--card-bg-image{% endif %}">
+  <div class="rr-heritage__wrap">
+    <div class="rr-heritage__grid">
+      <!-- LEFT: IMAGE -->
+      <div class="rr-heritage__media">
+        <div class="rr-heritage__media-inner">
+          {% if section.settings.image != blank %}
+            {{ section.settings.image | image_url: width: 1800 | image_tag:
+              loading: 'lazy',
+              class: 'rr-heritage__img',
+              alt: section.settings.image.alt | escape
+            }}
+          {% else %}
+            <div class="rr-heritage__placeholder" aria-label="Image placeholder"></div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- RIGHT: CONTENT -->
+      <div class="rr-heritage__content">
+        <h2 class="rr-heritage__title">
+          {{ section.settings.heading_before | escape }}
+          <em>{{ section.settings.heading_emphasis | escape }}</em>
+        </h2>
+
+        {% if section.settings.subtext != blank %}
+          <p class="rr-heritage__subtext">{{ section.settings.subtext }}</p>
+        {% endif %}
+
+        {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+          <a class="rr-heritage__btn" href="{{ section.settings.button_link }}">
+            {{ section.settings.button_label | escape }}
+          </a>
+        {% endif %}
+
+        {% if section.blocks.size > 0 %}
+          <div class="rr-heritage__carousel-wrap">
+            <div class="rr-heritage__cards" id="rr-cards-{{ section.id }}">
+              {% for block in section.blocks %}
+                <div class="rr-heritage__card" {{ block.shopify_attributes }}>
+                  <div class="rr-heritage__icon" aria-hidden="true">
+                    {% if block.settings.custom_icon != blank %}
+                      {{ block.settings.custom_icon | image_url: width: 100 | image_tag:
+                        loading: 'lazy',
+                        class: 'rr-heritage__icon-img',
+                        alt: ''
+                      }}
+                    {% else %}
+                      {% case block.settings.icon %}
+                        {% when 'arrows' %}
+                          <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M7 7h8a4 4 0 0 1 4 4v1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M17 3l-4 4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M17 17H9a4 4 0 0 1-4-4v-1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M7 21l4-4-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        {% when 'heart' %}
+                          <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M12 21s-7-4.5-9.5-8.5C.7 9.4 2.5 6 6 6c2 0 3.2 1.1 4 2.1C10.8 7.1 12 6 14 6c3.5 0 5.3 3.4 3.5 6.5C19 16.5 12 21 12 21Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M9.2 12.2h1.6l1-2.2 1.2 4.2 1-2h1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        {% when 'leaf' %}
+                          <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M20 4s-7 0-11 4-4 11-4 11 7 0 11-4 4-11 4-11Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                            <path d="M9 15c2-2 6-6 11-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                          </svg>
+                        {% else %}
+                          <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2v20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M2 12h20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                          </svg>
+                      {% endcase %}
+                    {% endif %}
+                  </div>
+
+                  <div class="rr-heritage__card-text">
+                    {% if block.settings.title != blank %}
+                      <h3 class="rr-heritage__card-title">{{ block.settings.title | escape }}</h3>
+                    {% endif %}
+                    {% if block.settings.text != blank %}
+                      <p class="rr-heritage__card-body">{{ block.settings.text }}</p>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+
+            {% if section.blocks.size > 1 %}
+            <div class="rr-heritage__dots" id="rr-dots-{{ section.id }}" aria-label="Card navigation">
+              {% for block in section.blocks %}
+                <button
+                  class="rr-heritage__dot {% if forloop.first %}rr-heritage__dot--active{% endif %}"
+                  data-index="{{ forloop.index0 }}"
+                  aria-label="Go to card {{ forloop.index }}"
+                ></button>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Figtree:wght@300;400;500;600;700&display=swap');
+
+  .rr-heritage {
+    --bg: {{ section.settings.bg_color }};
+    --title: {{ section.settings.title_color }};
+    --text: {{ section.settings.text_color }};
+    --muted: {{ section.settings.muted_color }};
+    --accent: {{ section.settings.accent_color }};
+    --card-bg: {{ section.settings.card_bg }};
+    --card-border: {{ section.settings.card_border }};
+    --btn-bg: {{ section.settings.button_bg }};
+    --btn-text: {{ section.settings.button_text }};
+    --heading-font: '{{ section.settings.heading_font }}', Georgia, serif;
+    --body-font: '{{ section.settings.body_font }}', -apple-system, sans-serif;
+    --heading-size: {{ section.settings.heading_size }}px;
+    --heading-weight: {{ section.settings.heading_weight }};
+    --card-heading-size: {{ section.settings.card_heading_size }}px;
+    --card-heading-weight: {{ section.settings.card_heading_weight }};
+    --section-padding-top: {{ section.settings.padding_top }}px;
+    --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+    background: var(--bg);
+    padding: 100px 0 0 !important;
+    font-family: var(--body-font);
+  }
+  .rr-heritage__wrap {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+  }
+  .rr-heritage--full .rr-heritage__wrap {
+    width: min(1280px, calc(100% - 40px));
+  }
+  .rr-heritage__grid {
+    display: grid;
+    grid-template-columns: 1fr 1.08fr;
+    gap: clamp(18px, 3vw, 44px);
+    align-items: stretch;
+  }
+
+  .rr-heritage__media {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+  }
+  .rr-heritage__media-inner {
+    background: #ffffff;
+    border-radius: 26px;
+    overflow: hidden;
+    box-shadow: 0 10px 26px rgba(0,0,0,.06);
+    flex: 1;
+    position: relative;
+    min-height: 300px;
+  }
+  .rr-heritage__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center top;
+  }
+  .rr-heritage__placeholder {
+    flex: 1;
+    min-height: 200px;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,.05) 1px, transparent 1px) 0 0 / 42px 42px,
+      linear-gradient(0deg, rgba(0,0,0,.05) 1px, transparent 1px) 0 0 / 42px 42px,
+      #f2f2f2;
+  }
+
+  .rr-heritage__content { display: flex; flex-direction: column; min-height: 100%; }
+
+  .rr-heritage__title {
+    margin: 8px 0 0 !important;       /* heading sits at top, no bottom margin — subtext follows naturally */
+    font-size: var(--heading-size);
+    line-height: 1.12;
+    color: var(--title);
+    letter-spacing: 0.01em;
+    font-weight: 200;
+    font-family: var(--heading-font);
+  }
+  .rr-heritage__title em { font-style: italic; font-weight: 300; }
+
+  .rr-heritage__subtext {
+    margin: 6px 0 0 !important;       /* tight gap from heading → text */
+    color: var(--muted);
+    font-size: 14.5px;
+    line-height: 1.55;
+    max-width: 52ch;
+    font-weight: 400;
+    font-family: var(--body-font);
+  }
+  .rr-heritage__subtext p:last-child { margin-bottom: 0; }
+
+  .rr-heritage__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 40px;
+    min-width: 220px;
+    margin-top: 28px !important;      /* DESKTOP: 28px from text → button */
+    border-radius: 10px;
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,.18);
+    transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+    font-family: var(--body-font);
+    align-self: flex-start;
+  }
+  .rr-heritage__btn:hover { transform: translateY(-1px); opacity: 0.92; }
+
+  .rr-heritage__carousel-wrap {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .rr-heritage__cards {
+    margin-top: 48px !important;      /* DESKTOP: 48px from button → cards */
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .rr-heritage__card {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 14px 22px;
+    padding: 18px 24px;
+    border-radius: 16px;
+    background: var(--card-bg);
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    align-items: start;
+    text-align: left;
+    flex: 1;
+    min-height: 0;
+  }
+  .rr-heritage__icon {
+    width: 40px; height: 40px;
+    display: grid; place-items: center;
+    background: transparent;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+  .rr-heritage__icon svg { width: 24px; height: 24px; }
+  .rr-heritage__icon-img { width: 28px; height: 28px; object-fit: contain; }
+  .rr-heritage__card-text {
+    padding-top: 0; text-align: left; min-width: 0;
+    display: flex; flex-direction: column;
+  }
+  .rr-heritage__card-title {
+    margin: 0 !important; padding: 0 !important;
+    font-size: 18px; line-height: 1.35;
+    color: var(--title); font-weight: 400;
+    font-family: var(--heading-font);
+    text-align: left; letter-spacing: -0.01em;
+  }
+  .rr-heritage__card-body {
+    margin: 0 !important; padding: 0 !important;
+    color: var(--muted); font-size: 14px; line-height: 1.5;
+    font-family: 'Figtree', var(--body-font), sans-serif;
+    text-align: left;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+
+  /* Dots hidden on desktop */
+  .rr-heritage__dots { display: none; }
+
+  /* ============================================================
+     MOBILE
+  ============================================================ */
+  @media (max-width: 900px) {
+    .rr-heritage { padding-top: 100px !important; padding-bottom: 0 !important; }
+    .rr-heritage__grid { grid-template-columns: 1fr !important; gap: 28px !important; }
+    .rr-heritage__media-inner { border-radius: 22px !important; }
+
+    .rr-heritage__media-inner { position: relative !important; min-height: 0 !important; }
+    .rr-heritage__img { position: static !important; height: auto !important; }
+
+    .rr-heritage__content {
+      align-items: center !important;
+      text-align: center !important;
+      overflow: visible !important;
+      max-width: 360px !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+    .rr-heritage__title {
+      font-size: 32px !important; line-height: 1.15 !important;
+      margin-top: 40px !important;   /* MOBILE: 40px from top of content (image above) → heading */
+      margin-bottom: 0 !important;
+      font-weight: 300 !important;
+    }
+    .rr-heritage__title em { font-weight: 300 !important; }
+    .rr-heritage__subtext {
+      margin-top: 6px !important;    /* tight heading → text */
+      margin-bottom: 0 !important;
+      margin-left: auto !important; margin-right: auto !important;
+      font-size: 14px !important; line-height: 1.45 !important;
+      font-family: var(--body-font) !important;
+    }
+    .rr-heritage__subtext p { margin: 0 !important; padding: 0 !important; }
+
+    .rr-heritage__btn {
+      align-self: center !important;
+      margin-top: 16px !important;   /* MOBILE: 16px from text → button */
+      margin-bottom: 0 !important;
+      padding: 15px 36px !important;
+      min-width: 200px !important; font-size: 15px !important;
+    }
+
+    .rr-heritage__carousel-wrap {
+      width: 100vw !important;
+      margin-left: calc(-50vw + 50%) !important;
+      margin-right: calc(-50vw + 50%) !important;
+      overflow: visible !important;
+      padding-bottom: 6px !important;
+    }
+
+    .rr-heritage__cards {
+      display: flex !important; flex-direction: row !important;
+      overflow-x: auto !important; overflow-y: hidden !important;
+      scroll-snap-type: x mandatory !important; scroll-behavior: smooth !important;
+      -webkit-overflow-scrolling: touch !important;
+      gap: 12px !important; width: 100% !important;
+      margin-top: 32px !important;   /* MOBILE: 32px from button → cards */
+      margin-left: 0 !important; margin-right: 0 !important;
+      padding-bottom: 8px !important; padding-left: 20px !important; padding-right: 20px !important;
+      scrollbar-width: none !important;
+    }
+    .rr-heritage__cards::-webkit-scrollbar { display: none !important; }
+
+    .rr-heritage__card {
+      flex: 0 0 min(340px, calc(100vw - 48px)) !important;
+      width: min(340px, calc(100vw - 48px)) !important;
+      min-width: min(340px, calc(100vw - 48px)) !important;
+      max-width: 340px !important; min-height: 160px !important;
+      scroll-snap-align: center !important; scroll-snap-stop: always !important;
+      grid-template-columns: 1fr !important; grid-template-rows: auto 1fr !important;
+      gap: 8px !important; padding: 24px !important;
+      text-align: center !important; justify-items: center !important;
+      align-items: start !important; border-radius: 16px !important;
+      box-sizing: border-box !important; background: #F9F8F3 !important;
+    }
+
+    {% if section.settings.card_bg_image != blank %}
+    .rr-heritage--card-bg-image .rr-heritage__card {
+      background: url({{ section.settings.card_bg_image | image_url: width: 800 }}) center/cover no-repeat !important;
+    }
+    {% endif %}
+
+    .rr-heritage__icon {
+      margin: 0 !important; justify-self: center !important;
+      width: 36px !important; height: 36px !important;
+      color: var(--accent) !important;
+    }
+    .rr-heritage__icon svg { width: 22px !important; height: 22px !important; }
+    .rr-heritage__card-text {
+      text-align: center !important; width: 100% !important;
+      display: flex !important; flex-direction: column !important;
+    }
+    .rr-heritage__card-title {
+      text-align: center !important; margin: 0 !important; padding: 0 !important;
+      font-size: 18px !important; line-height: 1.25 !important; font-weight: 400 !important;
+    }
+    .rr-heritage__card-body {
+      text-align: center !important; margin: 0 !important; padding: 0 !important;
+      font-size: 14px !important; line-height: 1.5 !important;
+    }
+
+    .rr-heritage__dots {
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 8px !important;
+      margin-top: 14px !important;
+      padding: 0 !important;
+    }
+    .rr-heritage__dot {
+      width: 8px !important; height: 8px !important;
+      border-radius: 50% !important;
+      background: rgba(0, 0, 0, 0.18) !important;
+      border: none !important; padding: 0 !important;
+      cursor: pointer !important; flex-shrink: 0 !important;
+      transition: background 0.25s ease, transform 0.25s ease !important;
+    }
+    .rr-heritage__dot--active {
+      background: var(--accent, #D97B7B) !important;
+      transform: scale(1.35) !important;
+    }
+  }
+
+  /* ===== HOW TO USE BLOCK ===== */
+  .rr-heritage-how {
+    text-align: center;
+    padding: 80px 24px 0 !important;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .rr-heritage-how__title {
+    font-family: var(--heading-font);
+    font-size: 38px;
+    font-weight: 300;
+    color: #1E293B;
+    margin: 0 0 16px 0 !important;
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+  }
+  .rr-heritage-how__title em { font-style: italic; font-weight: 300; }
+  .rr-heritage-how__sub {
+    font-family: var(--body-font);
+    font-size: 15.5px;
+    color: #5A667A;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto 28px !important;
+  }
+  .rr-heritage-how__btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 16px 40px !important;
+    border-radius: 10px !important;
+    background: var(--btn-bg) !important;
+    color: var(--btn-text) !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    font-size: 15px !important;
+    font-family: var(--body-font) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,.18) !important;
+    transition: transform .15s ease, opacity .15s ease !important;
+    width: auto !important;
+    max-width: fit-content !important;
+  }
+  .rr-heritage-how__btn:hover { transform: translateY(-1px) !important; opacity: 0.92 !important; }
+
+  @media (max-width: 768px) {
+    .rr-heritage-how { padding: 60px 20px 0 !important; }
+    .rr-heritage-how__title { font-size: 30px !important; margin-bottom: 14px !important; }
+    .rr-heritage-how__sub { font-size: 15px !important; margin-bottom: 24px !important; }
+    .rr-heritage-how__btn { padding: 14px 32px !important; font-size: 14.5px !important; }
+  }
+
+  @media (max-width: 600px) {
+    .rr-heritage { padding-top: 100px !important; padding-bottom: 0 !important; }
+    .rr-heritage__grid { gap: 28px !important; }
+    .rr-heritage__content { max-width: 340px !important; }
+    .rr-heritage__title {
+      font-size: 26px !important;
+      margin-top: 40px !important;   /* MOBILE: keep 40px at 600px too */
+      margin-bottom: 0 !important;
+      font-weight: 300 !important;
+    }
+    .rr-heritage__subtext {
+      font-size: 13.5px !important; line-height: 1.44 !important;
+      margin-top: 6px !important; margin-bottom: 0 !important;
+    }
+    .rr-heritage__btn {
+      margin-top: 16px !important;   /* MOBILE: keep 16px text → button */
+      padding: 14px 32px !important;
+      min-width: 200px !important; font-size: 14.5px !important;
+    }
+    .rr-heritage__cards {
+      margin-top: 32px !important;   /* MOBILE: keep 32px button → cards */
+      gap: 10px !important;
+    }
+    .rr-heritage__card { padding: 24px 22px !important; gap: 8px !important; border-radius: 16px !important; }
+    .rr-heritage__dots { margin-top: 12px !important; gap: 7px !important; }
+    .rr-heritage__dot { width: 7px !important; height: 7px !important; }
+  }
+</style>
+
+<script>
+(function() {
+  function initHeritageCarousel(sectionId) {
+    var cards  = document.getElementById('rr-cards-' + sectionId);
+    var dotsEl = document.getElementById('rr-dots-' + sectionId);
+    if (!cards || !dotsEl) return;
+
+    var dots    = Array.from(dotsEl.querySelectorAll('.rr-heritage__dot'));
+    var cardEls = Array.from(cards.querySelectorAll('.rr-heritage__card'));
+    var total   = cardEls.length;
+    if (total < 2) return;
+
+    var current = 0, ticking = false;
+
+    function setActive(index) {
+      dots[current].classList.remove('rr-heritage__dot--active');
+      current = index;
+      dots[current].classList.add('rr-heritage__dot--active');
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function() {
+        var containerCenter = cards.scrollLeft + cards.offsetWidth / 2;
+        var closest = 0, minDist = Infinity;
+        cardEls.forEach(function(card, i) {
+          var dist = Math.abs((card.offsetLeft + card.offsetWidth / 2) - containerCenter);
+          if (dist < minDist) { minDist = dist; closest = i; }
+        });
+        setActive(closest);
+        ticking = false;
+      });
+    }
+
+    cards.addEventListener('scroll', onScroll, { passive: true });
+
+    dots.forEach(function(dot, i) {
+      dot.addEventListener('click', function() {
+        var target = cardEls[i];
+        if (!target) return;
+        var scrollTo = target.offsetLeft - (cards.offsetWidth / 2) + (target.offsetWidth / 2);
+        cards.scrollTo({ left: scrollTo, behavior: 'smooth' });
+        setActive(i);
+      });
+    });
+
+    dotsEl.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowRight' && current < total - 1) dots[current + 1].click();
+      if (e.key === 'ArrowLeft'  && current > 0)         dots[current - 1].click();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() { initHeritageCarousel('{{ section.id }}'); });
+  } else {
+    initHeritageCarousel('{{ section.id }}');
+  }
+
+  document.addEventListener('shopify:section:load', function(e) {
+    if (e.detail && e.detail.sectionId === '{{ section.id }}') initHeritageCarousel('{{ section.id }}');
+  });
+})();
+</script>
+
+{% if section.settings.show_how_to_use %}
+<style>
+  .rr-heritage-how {
+    --btn-bg: {{ section.settings.button_bg }};
+    --btn-text: {{ section.settings.button_text }};
+    --heading-font: '{{ section.settings.heading_font }}', Georgia, serif;
+    --body-font: '{{ section.settings.body_font }}', -apple-system, sans-serif;
+  }
+</style>
+<div class="rr-heritage-how">
+  <h2 class="rr-heritage-how__title">
+    {{ section.settings.how_to_title_before | default: 'How to Use ' }}<em>{{ section.settings.how_to_title_emphasis | default: 'Root Reboot' }}</em>
+  </h2>
+  {% if section.settings.how_to_subtitle != blank %}
+    <p class="rr-heritage-how__sub">{{ section.settings.how_to_subtitle }}</p>
+  {% endif %}
+  {% if section.settings.how_to_btn_label != blank %}
+    <a href="{{ section.settings.how_to_button_link | default: '#' }}" class="rr-heritage-how__btn">
+      {{ section.settings.how_to_btn_label }}
+    </a>
+  {% endif %}
+</div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Heritage Story Split",
+  "settings": [
+    { "type": "checkbox", "id": "section_full_width", "label": "Wider container", "default": false },
+    { "type": "image_picker", "id": "image", "label": "Left image" },
+    { "type": "text", "id": "heading_before", "label": "Heading (before)", "default": "Born from" },
+    { "type": "text", "id": "heading_emphasis", "label": "Heading (italic word)", "default": "Heritage" },
+    { "type": "richtext", "id": "subtext", "label": "Description", "default": "<p>Root Reboot began a tradition of intentional hair oiling, a ritual that nourishes hair naturally.</p>" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Read the Full Story" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "header", "content": "Spacing" },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 120, "step": 10, "unit": "px", "default": 100 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 120, "step": 10, "unit": "px", "default": 0 },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg_color", "label": "Section background", "default": "#FFFFFF" },
+    { "type": "color", "id": "title_color", "label": "Title color", "default": "#1E293B" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#1F2A44" },
+    { "type": "color", "id": "muted_color", "label": "Muted text color", "default": "#5A667A" },
+    { "type": "color", "id": "accent_color", "label": "Icon accent", "default": "#D97B7B" },
+    { "type": "color", "id": "card_bg", "label": "Card background", "default": "#F9F8F3" },
+    { "type": "image_picker", "id": "card_bg_image", "label": "Card background image (mobile)", "info": "Upload Frame 3 / cream shape - used as card BG on mobile with text on top." },
+    { "type": "color", "id": "card_border", "label": "Card border (unused)", "default": "#EFE7E1" },
+    { "type": "color", "id": "button_bg", "label": "Button background", "default": "#912643" },
+    { "type": "color", "id": "button_text", "label": "Button text color", "default": "#FFFFFF" },
+    { "type": "header", "content": "Typography" },
+    { "type": "select", "id": "heading_font", "label": "Heading font", "options": [
+      { "value": "Playfair Display", "label": "Playfair Display (Serif)" },
+      { "value": "Georgia", "label": "Georgia (Serif)" },
+      { "value": "Figtree", "label": "Figtree (Sans-serif)" },
+      { "value": "Arial", "label": "Arial (Sans-serif)" }
+    ], "default": "Playfair Display" },
+    { "type": "range", "id": "heading_size", "label": "Main heading size", "min": 24, "max": 56, "step": 2, "unit": "px", "default": 42 },
+    { "type": "select", "id": "heading_weight", "label": "Main heading weight", "options": [
+      { "value": "300", "label": "Light (300)" },
+      { "value": "400", "label": "Regular (400)" },
+      { "value": "500", "label": "Medium (500)" },
+      { "value": "600", "label": "Semi-Bold (600)" },
+      { "value": "700", "label": "Bold (700)" }
+    ], "default": "300" },
+    { "type": "range", "id": "card_heading_size", "label": "Card heading size", "min": 14, "max": 26, "step": 1, "unit": "px", "default": 20 },
+    { "type": "select", "id": "card_heading_weight", "label": "Card heading weight", "options": [
+      { "value": "300", "label": "Light (300)" },
+      { "value": "400", "label": "Regular (400)" },
+      { "value": "500", "label": "Medium (500)" },
+      { "value": "600", "label": "Semi-Bold (600)" },
+      { "value": "700", "label": "Bold (700)" }
+    ], "default": "500" },
+    { "type": "select", "id": "body_font", "label": "Body text font", "options": [
+      { "value": "Figtree", "label": "Figtree (Sans-serif)" },
+      { "value": "Arial", "label": "Arial (Sans-serif)" },
+      { "value": "Helvetica", "label": "Helvetica (Sans-serif)" },
+      { "value": "Georgia", "label": "Georgia (Serif)" }
+    ], "default": "Figtree" },
+    { "type": "header", "content": "How to Use Section" },
+    { "type": "checkbox", "id": "show_how_to_use", "label": "Show How to Use section", "default": true },
+    { "type": "text", "id": "how_to_title_before", "label": "Title (before italic)", "default": "How to Use " },
+    { "type": "text", "id": "how_to_title_emphasis", "label": "Title (italic part)", "default": "Root Reboot" },
+    { "type": "textarea", "id": "how_to_subtitle", "label": "Subtitle", "default": "Root Reboot began a tradition of intentional hair oiling, a ritual that nourishes hair naturally." },
+    { "type": "text", "id": "how_to_btn_label", "label": "Button text", "default": "Add Root Reboot to Your Routine" },
+    { "type": "url", "id": "how_to_button_link", "label": "Button link" }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature card",
+      "settings": [
+        { "type": "image_picker", "id": "custom_icon", "label": "Custom Icon (Optional)", "info": "Upload your own icon image. If provided, this will override the icon selection below." },
+        { "type": "select", "id": "icon", "label": "Icon (if no custom icon uploaded)", "default": "arrows", "options": [
+          { "value": "arrows", "label": "Arrows" },
+          { "value": "heart", "label": "Heart" },
+          { "value": "leaf", "label": "Leaf" }
+        ]},
+        { "type": "text", "id": "title", "label": "Title", "default": "A Ritual Passed Through Generations" },
+        { "type": "richtext", "id": "text", "label": "Text (keep short for two lines)", "default": "<p>A family practice built on trust. Hair care was valued.</p>" }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Heritage Story Split",
+      "blocks": [
+        { "type": "feature", "settings": { "title": "A Ritual Passed Through Generations", "text": "<p>A family practice built on trust. Hair care was valued.</p>" } },
+        { "type": "feature", "settings": { "icon": "heart", "title": "Inspired by Our Nani", "text": "<p>Root Reboot, guided by nani's wisdom. Experience shapes the formula.</p>" } },
+        { "type": "feature", "settings": { "icon": "leaf", "title": "Tradition, Thoughtfully Reimagined", "text": "<p>We honor ancestral knowledge and modern standards for effective care.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

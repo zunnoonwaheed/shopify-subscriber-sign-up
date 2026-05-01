@@ -1,0 +1,227 @@
+{% comment %}
+  Testimonial Section
+  Displays customer testimonial with image
+{% endcomment %}
+
+<style>
+  .testimonial-section {
+    background: {{ section.settings.section_bg_color }};
+    padding: 80px 20px;
+  }
+
+  .testimonial-container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .testimonial-card {
+    background: {{ section.settings.card_bg_color }};
+    border-radius: {{ section.settings.card_roundedness }}px;
+    padding: 50px;
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 60px;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  }
+
+  .testimonial-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .testimonial-quote {
+    font-size: 18px;
+    line-height: 1.7;
+    color: #2c2c2c;
+    font-weight: 400;
+    margin: 0;
+  }
+
+  .testimonial-author {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .author-name {
+    font-size: 17px;
+    font-weight: 600;
+    color: #2c2c2c;
+    font-family: 'Georgia', serif;
+    font-style: italic;
+  }
+
+  .author-context {
+    font-size: 14px;
+    color: #5a5a5a;
+    line-height: 1.5;
+  }
+
+  .testimonial-image {
+    border-radius: {{ section.settings.image_roundedness }}px;
+    overflow: hidden;
+    width: 100%;
+    aspect-ratio: 1;
+  }
+
+  .testimonial-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  @media (max-width: 968px) {
+    .testimonial-card {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      padding: 40px 30px;
+    }
+
+    .testimonial-image {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .testimonial-quote {
+      font-size: 17px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .testimonial-section {
+      padding: 60px 20px;
+    }
+
+    .testimonial-card {
+      padding: 30px 24px;
+      gap: 30px;
+    }
+
+    .testimonial-quote {
+      font-size: 16px;
+    }
+
+    .testimonial-image {
+      aspect-ratio: 4/3;
+    }
+  }
+</style>
+
+<section class="testimonial-section">
+  <div class="testimonial-container">
+    {% for block in section.blocks %}
+      <div class="testimonial-card" {{ block.shopify_attributes }}>
+        <div class="testimonial-content">
+          <p class="testimonial-quote">
+            "{{ block.settings.quote }}"
+          </p>
+          <div class="testimonial-author">
+            <div class="author-name">{{ block.settings.author_name }}</div>
+            <div class="author-context">{{ block.settings.author_context }}</div>
+          </div>
+        </div>
+        <div class="testimonial-image">
+          {% if block.settings.image != blank %}
+            {{ block.settings.image | image_url: width: 800 | image_tag: loading: 'lazy', alt: block.settings.author_name }}
+          {% else %}
+            <img src="https://via.placeholder.com/800x800/E5E5E5/666666?text=Testimonial+Image" alt="{{ block.settings.author_name }}" loading="lazy">
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Testimonial",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Styling"
+    },
+    {
+      "type": "color_background",
+      "id": "section_bg_color",
+      "label": "Section Background",
+      "default": "linear-gradient(180deg, rgba(248, 245, 240, 1) 0%, rgba(255, 255, 255, 1) 100%)"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#faf8f4"
+    },
+    {
+      "type": "range",
+      "id": "card_roundedness",
+      "label": "Card Roundedness",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "image_roundedness",
+      "label": "Image Roundedness",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Testimonial Quote",
+          "default": "After weeks of consistent use, my hair felt stronger at the roots and noticeably calmer at the scalp. There was no overnight change — just steady improvement that made me trust the process."
+        },
+        {
+          "type": "text",
+          "id": "author_name",
+          "label": "Author Name",
+          "default": "Ayesha M."
+        },
+        {
+          "type": "text",
+          "id": "author_context",
+          "label": "Author Context",
+          "default": "After consistent use of Root Reboot"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Testimonial Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonial",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "quote": "After weeks of consistent use, my hair felt stronger at the roots and noticeably calmer at the scalp. There was no overnight change — just steady improvement that made me trust the process.",
+            "author_name": "Ayesha M.",
+            "author_context": "After consistent use of Root Reboot"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

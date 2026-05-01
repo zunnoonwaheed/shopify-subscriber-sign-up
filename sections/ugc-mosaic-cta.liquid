@@ -1,0 +1,249 @@
+{% comment %}
+  Section: UGC Mosaic + Bottom CTA (like screenshot)
+  Save as: sections/ugc-mosaic-cta.liquid
+{% endcomment %}
+
+<section class="rr-ugc" style="
+  --bg: {{ section.settings.bg_color }};
+  --title: {{ section.settings.title_color }};
+  --muted: {{ section.settings.muted_color }};
+  --btn-bg: {{ section.settings.button_bg }};
+  --btn-text: {{ section.settings.button_text }};
+">
+  <div class="rr-ugc__wrap">
+
+    <!-- MOSAIC -->
+    <div class="rr-ugc__mosaic" aria-label="UGC gallery">
+      {% for block in section.blocks %}
+        {% if block.type == 'tile' %}
+          <div class="rr-ugc__tile rr-ugc__tile--{{ block.settings.size }}" {{ block.shopify_attributes }}>
+            {% if block.settings.image != blank %}
+              {{ block.settings.image | image_url: width: 1400 | image_tag:
+                loading: 'lazy',
+                class: 'rr-ugc__img',
+                alt: block.settings.alt_text | default: block.settings.image.alt | escape
+              }}
+            {% else %}
+              <div class="rr-ugc__ph" aria-hidden="true"></div>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      <!-- side fades (like screenshot) -->
+      {% if section.settings.side_fade %}
+        <div class="rr-ugc__fade rr-ugc__fade--left" aria-hidden="true"></div>
+        <div class="rr-ugc__fade rr-ugc__fade--right" aria-hidden="true"></div>
+      {% endif %}
+    </div>
+
+    <!-- BOTTOM CONTENT -->
+    <div class="rr-ugc__bottom">
+      <h2 class="rr-ugc__h2">
+        {{ section.settings.heading_before | escape }}
+        <em>{{ section.settings.heading_emphasis | escape }}</em>
+        {{ section.settings.heading_after | escape }}
+      </h2>
+
+      {% if section.settings.subheading != blank %}
+        <div class="rr-ugc__sub">{{ section.settings.subheading }}</div>
+      {% endif %}
+
+      {% if section.settings.button_label != blank %}
+        <a class="rr-ugc__btn"
+           href="{{ section.settings.button_link | default: '#' }}">
+          {{ section.settings.button_label | escape }}
+        </a>
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .rr-ugc{
+    background: var(--bg);
+    padding: clamp(22px, 3vw, 44px) 0 clamp(48px, 5vw, 84px);
+  }
+  .rr-ugc__wrap{
+    width: min(1220px, calc(100% - 40px));
+    margin: 0 auto;
+  }
+
+  /* MOSAIC GRID */
+  .rr-ugc__mosaic{
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(12px, 1.6vw, 18px);
+    padding: clamp(10px, 1.6vw, 16px);
+  }
+
+  .rr-ugc__tile{
+    border-radius: 18px;
+    overflow: hidden;
+    background: #f3f1ee;
+    box-shadow: 0 12px 26px rgba(0,0,0,.06);
+  }
+  .rr-ugc__img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .rr-ugc__ph{
+    width: 100%;
+    height: 100%;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,.05) 1px, transparent 1px) 0 0 / 42px 42px,
+      linear-gradient(0deg, rgba(0,0,0,.05) 1px, transparent 1px) 0 0 / 42px 42px,
+      #f2f2f2;
+  }
+
+  /* TILE SIZES (mimic screenshot: mix of big + medium tiles) */
+  .rr-ugc__tile--sm{ aspect-ratio: 1 / 1; }
+  .rr-ugc__tile--md{ aspect-ratio: 4 / 3; }
+  .rr-ugc__tile--tall{ aspect-ratio: 3 / 4; }
+  .rr-ugc__tile--wide{ aspect-ratio: 16 / 9; grid-column: span 2; }
+
+  /* side fades */
+  .rr-ugc__fade{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 140px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .rr-ugc__fade--left{
+    left: 0;
+    background: linear-gradient(to right, var(--bg), rgba(0,0,0,0));
+  }
+  .rr-ugc__fade--right{
+    right: 0;
+    background: linear-gradient(to left, var(--bg), rgba(0,0,0,0));
+  }
+
+  /* BOTTOM CONTENT */
+  .rr-ugc__bottom{
+    text-align: center;
+    padding-top: clamp(22px, 3vw, 34px);
+  }
+  .rr-ugc__h2{
+    margin: 0 0 10px;
+    color: var(--title);
+    font-size: clamp(28px, 3vw, 44px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
+  .rr-ugc__h2 em{
+    font-style: italic;
+    font-weight: 500;
+  }
+  .rr-ugc__sub{
+    margin: 0 auto;
+    max-width: 84ch;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.65;
+  }
+  .rr-ugc__btn,
+  .rr-ugc__btn:hover,
+  .rr-ugc__btn:visited,
+  .rr-ugc__btn:active,
+  .rr-ugc__btn:focus{
+    margin-top: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 26px;
+    border-radius: 14px;
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    text-decoration: none !important;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1;
+    border: 1px solid rgba(0,0,0,.05);
+    box-shadow: 0 10px 22px rgba(0,0,0,.08);
+    transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+  }
+  .rr-ugc__btn:hover{
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(0,0,0,.10);
+    opacity: .98;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px){
+    .rr-ugc__mosaic{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .rr-ugc__fade{ width: 100px; }
+  }
+  @media (max-width: 720px){
+    .rr-ugc__mosaic{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .rr-ugc__tile--wide{ grid-column: span 2; }
+    .rr-ugc__fade{ display: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "UGC Mosaic CTA",
+  "settings": [
+    { "type": "header", "content": "Gallery" },
+    { "type": "checkbox", "id": "side_fade", "label": "Side fade overlays", "default": true },
+
+    { "type": "header", "content": "Bottom content" },
+    { "type": "text", "id": "heading_before", "label": "Heading (before)", "default": "Loved by " },
+    { "type": "text", "id": "heading_emphasis", "label": "Heading (italic)", "default": "Real Roots," },
+    { "type": "text", "id": "heading_after", "label": "Heading (after)", "default": " Real People" },
+    { "type": "richtext", "id": "subheading", "label": "Subheading", "default": "<p>Rated highly by customers who made Root Reboot part of their routine — real stories, real results, no exaggeration.</p>" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop Root Reboot" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#F6F2EE" },
+    { "type": "color", "id": "title_color", "label": "Heading color", "default": "#1F2A44" },
+    { "type": "color", "id": "muted_color", "label": "Body text", "default": "#5A667A" },
+    { "type": "color", "id": "button_bg", "label": "Button background", "default": "#7B2130" },
+    { "type": "color", "id": "button_text", "label": "Button text", "default": "#FFFFFF" }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Image tile",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "alt_text", "label": "Alt text (optional)" },
+        {
+          "type": "select",
+          "id": "size",
+          "label": "Tile size",
+          "default": "tall",
+          "options": [
+            { "value": "sm", "label": "Small (1:1)" },
+            { "value": "md", "label": "Medium (4:3)" },
+            { "value": "tall", "label": "Tall (3:4)" },
+            { "value": "wide", "label": "Wide (16:9, spans 2 columns)" }
+          ]
+        }
+      ]
+    }
+  ],
+  "max_blocks": 16,
+  "presets": [
+    {
+      "name": "UGC Mosaic + CTA",
+      "blocks": [
+        { "type": "tile", "settings": { "size": "tall" } },
+        { "type": "tile", "settings": { "size": "tall" } },
+        { "type": "tile", "settings": { "size": "tall" } },
+        { "type": "tile", "settings": { "size": "tall" } },
+        { "type": "tile", "settings": { "size": "wide" } },
+        { "type": "tile", "settings": { "size": "wide" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

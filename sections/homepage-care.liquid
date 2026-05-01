@@ -1,0 +1,607 @@
+{% comment %}
+  Section: Rooted in Care - Image Gallery with CTA
+  With edge shadows for fade effect
+{% endcomment %}
+
+<section class="rr-care" style="
+  --bg: {{ section.settings.bg_color }};
+  --title: {{ section.settings.title_color }};
+  --text: {{ section.settings.text_color }};
+  --btn-bg: {{ section.settings.button_bg }};
+  --btn-text: {{ section.settings.button_text }};
+  --heading-font: '{{ section.settings.heading_font }}', Georgia, serif;
+  --body-font: '{{ section.settings.body_font }}', -apple-system, sans-serif;
+  --heading-weight: {{ section.settings.heading_weight }};
+  --heading-size: {{ section.settings.heading_size }}px;
+  --section-padding-top: {{ section.settings.padding_top }}px;
+  --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+">
+  <div class="rr-care__wrap">
+
+    <!-- HEADER -->
+    <header class="rr-care__head">
+      <h2 class="rr-care__h2">
+        {{ section.settings.heading_before | escape }}
+        <em>{{ section.settings.heading_emphasis | escape }}</em>{{ section.settings.heading_after | escape }}
+      </h2>
+
+      {% if section.settings.subheading != blank %}
+        <p class="rr-care__sub">{{ section.settings.subheading }}</p>
+      {% endif %}
+
+      {% if section.settings.button_label != blank %}
+        <a class="rr-care__btn" href="{{ section.settings.button_link | default: '#' }}">
+          {{ section.settings.button_label | escape }}
+        </a>
+      {% endif %}
+    </header>
+
+    <!-- IMAGE GALLERY -->
+    {% if section.blocks.size > 0 %}
+      <div class="rr-care__gallery-container">
+        <div class="rr-care__gallery">
+          {% for block in section.blocks %}
+            <div class="rr-care__item" {{ block.shopify_attributes }}>
+              {% if block.settings.image != blank %}
+                {{ block.settings.image | image_url: width: 800 | image_tag:
+                  loading: 'lazy',
+                  class: 'rr-care__img',
+                  alt: block.settings.image.alt | escape
+                }}
+              {% else %}
+                <div class="rr-care__placeholder"></div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Figtree:wght@300;400;500;600;700&display=swap');
+
+  .rr-care {
+    background: var(--bg);
+    padding: var(--section-padding-top) 0 var(--section-padding-bottom);
+    font-family: var(--body-font);
+  }
+
+  .rr-care__wrap {
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* HEADER */
+  .rr-care__head {
+    text-align: center;
+    margin-bottom: {{ section.settings.header_margin_bottom }}px;
+  }
+
+  .rr-care__h2 {
+    margin: 0 0 {{ section.settings.title_margin_bottom }}px;
+    color: var(--title);
+    font-family: var(--heading-font);
+    font-size: var(--heading-size);
+    font-weight: var(--heading-weight);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .rr-care__h2 em {
+    font-style: italic;
+    font-weight: var(--heading-weight);
+  }
+
+  .rr-care__sub {
+    margin: 0 auto;
+    max-width: {{ section.settings.subtitle_max_width }}px;
+    color: var(--text);
+    font-family: var(--body-font);
+    font-size: {{ section.settings.subtitle_size }}px;
+    font-weight: {{ section.settings.subtitle_weight }};
+    line-height: 1.7;
+  }
+
+  /* BUTTON */
+  .rr-care__btn,
+  .rr-care__btn:hover,
+  .rr-care__btn:visited,
+  .rr-care__btn:focus,
+  .rr-care__btn:active {
+    display: inline-block;
+    margin-top: {{ section.settings.button_margin_top }}px;
+    padding: {{ section.settings.button_padding_vertical }}px {{ section.settings.button_padding_horizontal }}px;
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    border-radius: {{ section.settings.button_roundedness }}px;
+    text-decoration: none !important;
+    font-family: var(--body-font);
+    font-weight: {{ section.settings.button_font_weight }};
+    font-size: {{ section.settings.button_font_size }}px;
+    line-height: 1;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transition: all 0.2s ease;
+    letter-spacing: 0.2px;
+  }
+
+  .rr-care__btn:hover {
+    transform: translateY(-1px);
+    opacity: 0.92;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  /* GALLERY CONTAINER */
+  .rr-care__gallery-container {
+    position: relative;
+    border-radius: {{ section.settings.image_roundedness }}px;
+    overflow: hidden;
+  }
+
+  .rr-care__gallery-container::before,
+  .rr-care__gallery-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 150px;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .rr-care__gallery-container::before {
+    left: 0;
+    background: linear-gradient(to right, rgba(0, 0, 0, {{ section.settings.shadow_opacity | divided_by: 100.0 }}) 0%, rgba(0, 0, 0, 0) 100%);
+  }
+
+  .rr-care__gallery-container::after {
+    right: 0;
+    background: linear-gradient(to left, rgba(0, 0, 0, {{ section.settings.shadow_opacity | divided_by: 100.0 }}) 0%, rgba(0, 0, 0, 0) 100%);
+  }
+
+  /* GALLERY */
+  .rr-care__gallery {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+    gap: {{ section.settings.gallery_gap }}px;
+  }
+
+  .rr-care__item {
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border-radius: {{ section.settings.image_roundedness }}px;
+    background: #F5F3F0;
+    transition: transform 0.2s ease;
+  }
+
+  .rr-care__item:hover {
+    transform: scale(1.02);
+  }
+
+  .rr-care__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .rr-care__placeholder {
+    width: 100%;
+    height: 100%;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,.04) 1px, transparent 1px) 0 0 / 40px 40px,
+      linear-gradient(0deg, rgba(0,0,0,.04) 1px, transparent 1px) 0 0 / 40px 40px,
+      #F0EDE9;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 1024px) {
+    .rr-care {
+      padding: calc(var(--section-padding-top) * 0.85) 0 calc(var(--section-padding-bottom) * 0.85);
+    }
+
+    .rr-care__wrap {
+      padding: 0 20px;
+    }
+
+    .rr-care__h2 {
+      font-size: calc(var(--heading-size) * 0.9);
+    }
+
+    .rr-care__gallery-container::before,
+    .rr-care__gallery-container::after {
+      width: 100px;
+    }
+
+    .rr-care__gallery {
+      grid-template-columns: repeat(3, 1fr);
+      gap: calc({{ section.settings.gallery_gap }}px * 0.9);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .rr-care {
+      padding: calc(var(--section-padding-top) * 0.7) 0 calc(var(--section-padding-bottom) * 0.7);
+    }
+
+    .rr-care__h2 {
+      font-size: calc(var(--heading-size) * 0.8);
+    }
+
+    .rr-care__sub {
+      font-size: calc({{ section.settings.subtitle_size }}px * 0.95);
+    }
+
+    .rr-care__gallery {
+      grid-template-columns: repeat(2, 1fr);
+      gap: calc({{ section.settings.gallery_gap }}px * 0.75);
+    }
+
+    .rr-care__gallery-container::before,
+    .rr-care__gallery-container::after {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .rr-care__h2 {
+      font-size: calc(var(--heading-size) * 0.7);
+    }
+
+    .rr-care__gallery {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Care & Moments Gallery",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Settings"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section Background",
+      "default": "#FAF8F4"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top Padding",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom Padding",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum Width",
+      "min": 1000,
+      "max": 1400,
+      "step": 50,
+      "unit": "px",
+      "default": 1200
+    },
+    {
+      "type": "header",
+      "content": "Header Content"
+    },
+    {
+      "type": "text",
+      "id": "heading_before",
+      "label": "Heading (before italic)",
+      "default": "Rooted in "
+    },
+    {
+      "type": "text",
+      "id": "heading_emphasis",
+      "label": "Heading (italic word)",
+      "default": "Care"
+    },
+    {
+      "type": "text",
+      "id": "heading_after",
+      "label": "Heading (after italic)",
+      "default": ", Shared in Moments"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Root Reboot was shaped by real moments — shared stories, everyday rituals, and the belief that care is something we pass on."
+    },
+    {
+      "type": "range",
+      "id": "header_margin_bottom",
+      "label": "Header Margin Bottom",
+      "min": 30,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "default": 45
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select",
+      "id": "heading_font",
+      "label": "Heading Font",
+      "options": [
+        { "value": "Playfair Display", "label": "Playfair Display (Serif)" },
+        { "value": "Georgia", "label": "Georgia (Serif)" },
+        { "value": "Figtree", "label": "Figtree (Sans-serif)" }
+      ],
+      "default": "Playfair Display"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading Size",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 38
+    },
+    {
+      "type": "select",
+      "id": "heading_weight",
+      "label": "Heading Font Weight",
+      "options": [
+        { "value": "300", "label": "Light (300)" },
+        { "value": "400", "label": "Regular (400)" },
+        { "value": "500", "label": "Medium (500)" },
+        { "value": "600", "label": "Semi-Bold (600)" },
+        { "value": "700", "label": "Bold (700)" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Heading Color",
+      "default": "#1E293B"
+    },
+    {
+      "type": "range",
+      "id": "title_margin_bottom",
+      "label": "Title Margin Bottom",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "select",
+      "id": "body_font",
+      "label": "Body Font",
+      "options": [
+        { "value": "Figtree", "label": "Figtree (Sans-serif)" },
+        { "value": "Arial", "label": "Arial (Sans-serif)" },
+        { "value": "Helvetica", "label": "Helvetica (Sans-serif)" }
+      ],
+      "default": "Figtree"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size",
+      "label": "Subtitle Font Size",
+      "min": 12,
+      "max": 20,
+      "step": 0.5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "select",
+      "id": "subtitle_weight",
+      "label": "Subtitle Font Weight",
+      "options": [
+        { "value": "300", "label": "Light (300)" },
+        { "value": "400", "label": "Regular (400)" },
+        { "value": "500", "label": "Medium (500)" },
+        { "value": "600", "label": "Semi-bold (600)" }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#1E293B"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_max_width",
+      "label": "Subtitle Max Width",
+      "min": 500,
+      "max": 900,
+      "step": 50,
+      "unit": "px",
+      "default": 700
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "See Real Transformations"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "button_bg",
+      "label": "Button Background",
+      "default": "#7B2130"
+    },
+    {
+      "type": "color",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "button_font_size",
+      "label": "Button Font Size",
+      "min": 12,
+      "max": 18,
+      "step": 0.5,
+      "unit": "px",
+      "default": 13.5
+    },
+    {
+      "type": "select",
+      "id": "button_font_weight",
+      "label": "Button Font Weight",
+      "options": [
+        { "value": "400", "label": "Regular (400)" },
+        { "value": "500", "label": "Medium (500)" },
+        { "value": "600", "label": "Semi-bold (600)" },
+        { "value": "700", "label": "Bold (700)" }
+      ],
+      "default": "700"
+    },
+    {
+      "type": "range",
+      "id": "button_padding_vertical",
+      "label": "Button Padding Vertical",
+      "min": 8,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "button_padding_horizontal",
+      "label": "Button Padding Horizontal",
+      "min": 20,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "button_roundedness",
+      "label": "Button Roundedness",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "button_margin_top",
+      "label": "Button Margin Top",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "header",
+      "content": "Gallery Settings"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns (Desktop)",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "gallery_gap",
+      "label": "Gap Between Images",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "image_roundedness",
+      "label": "Image Roundedness",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "shadow_opacity",
+      "label": "Edge Shadow Opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 85,
+      "info": "Darkness of the shadow effect on gallery edges"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Gallery Image",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Recommended aspect ratio: 3:4 (portrait)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Care & Moments Gallery",
+      "blocks": [
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

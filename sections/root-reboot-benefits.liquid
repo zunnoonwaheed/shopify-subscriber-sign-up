@@ -1,0 +1,432 @@
+{% comment %}
+  Section: The Root Reboot Journal
+{% endcomment %}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Figtree:wght@300;400;500;600;700&display=swap');
+</style>
+
+<section class="rr-journal" style="
+  --bg: {{ section.settings.bg_color }};
+  --title: {{ section.settings.title_color }};
+  --text: {{ section.settings.text_color }};
+  --card-bg: {{ section.settings.card_bg }};
+  --btn-bg: {{ section.settings.button_bg }};
+  --btn-text: {{ section.settings.button_text }};
+  --category-bg: {{ section.settings.category_bg }};
+  --category-text: {{ section.settings.category_text }};
+  --category-active-bg: {{ section.settings.category_active_bg }};
+  --category-active-text: {{ section.settings.category_active_text }};
+  --image-bg: {{ section.settings.image_bg_color }};
+">
+  <div class="rr-journal__wrap">
+
+    <header class="rr-journal__head">
+      <h2 class="rr-journal__h2">{{ section.settings.heading | escape }}</h2>
+      {% if section.settings.subheading != blank %}
+        <p class="rr-journal__sub">{{ section.settings.subheading }}</p>
+      {% endif %}
+    </header>
+
+    {% if section.settings.show_categories %}
+      <nav class="rr-journal__cats rr-journal__cats--desktop">
+        <button class="rr-journal__cat rr-journal__cat--active" data-filter="all">Routine</button>
+        <button class="rr-journal__cat" data-filter="routine">Routine</button>
+        <button class="rr-journal__cat" data-filter="hair-wellness">Hair Wellness</button>
+        <button class="rr-journal__cat" data-filter="ingredients">Ingredients</button>
+        <button class="rr-journal__cat" data-filter="scalp-care">Scalp Care</button>
+        <button class="rr-journal__cat" data-filter="community">Community</button>
+      </nav>
+      <nav class="rr-journal__cats rr-journal__cats--mobile">
+        <button class="rr-journal__cat rr-journal__cat--active" data-filter="all">All</button>
+        <button class="rr-journal__cat" data-filter="routine">Routine</button>
+        <button class="rr-journal__cat" data-filter="hair-wellness">Hair Wellness</button>
+        <button class="rr-journal__cat" data-filter="ingredients">Ingredients</button>
+        <button class="rr-journal__cat" data-filter="scalp-care">Scalp Care</button>
+        <button class="rr-journal__cat" data-filter="community">Community</button>
+      </nav>
+    {% endif %}
+
+    <div class="rr-journal__grid">
+      {% for block in section.blocks %}
+        <article class="rr-journal__card" data-category="{{ block.settings.category }}" {{ block.shopify_attributes }}>
+          <a href="{{ block.settings.link | default: '#' }}" class="rr-journal__link">
+            <div class="rr-journal__media">
+              {% if block.settings.image != blank %}
+                {{ block.settings.image | image_url: width: 800 | image_tag: loading: 'lazy', class: 'rr-journal__img', alt: block.settings.image.alt | escape }}
+              {% else %}
+                <div class="rr-journal__placeholder"></div>
+              {% endif %}
+            </div>
+            <div class="rr-journal__body">
+              {% if block.settings.title != blank %}
+                <h3 class="rr-journal__h3">{{ block.settings.title | escape }}</h3>
+              {% endif %}
+              {% if block.settings.excerpt != blank %}
+                <p class="rr-journal__excerpt">{{ block.settings.excerpt }}</p>
+              {% endif %}
+              {% if block.settings.button_label != blank %}
+                <span class="rr-journal__btn">{{ block.settings.button_label | escape }}</span>
+              {% endif %}
+            </div>
+          </a>
+        </article>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .rr-journal {
+    background: var(--bg);
+    padding: {{ section.settings.section_padding_top }}px 20px {{ section.settings.section_padding_bottom }}px;
+  }
+  .rr-journal__wrap {
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  /* HEADER */
+  .rr-journal__head {
+    text-align: center;
+    margin-bottom: {{ section.settings.header_margin_bottom }}px;
+  }
+
+  /* Main heading — 32px fixed */
+  .rr-journal__h2 {
+    margin: 0 0 {{ section.settings.title_margin_bottom }}px !important;
+    color: var(--title);
+    font-family: {{ section.settings.title_font }};
+    font-size: 32px !important;
+    line-height: 1.2 !important;
+    font-weight: {{ section.settings.title_weight }};
+  }
+
+  .rr-journal__sub {
+    margin: 0 auto !important;
+    max-width: 800px;
+    color: var(--text);
+    font-family: {{ section.settings.subtitle_font }};
+    font-size: {{ section.settings.subtitle_size }}px;
+    font-weight: {{ section.settings.subtitle_weight }};
+    line-height: 1.7;
+  }
+
+  /* FILTER */
+  .rr-journal__cats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: {{ section.settings.category_gap }}px;
+    margin: 0 0 {{ section.settings.category_margin_bottom }}px;
+  }
+  .rr-journal__cat {
+    padding: {{ section.settings.category_padding_vertical }}px {{ section.settings.category_padding_horizontal }}px;
+    background: var(--category-bg);
+    color: var(--category-text);
+    border: none;
+    border-radius: {{ section.settings.category_roundedness }}px;
+    font-family: {{ section.settings.category_font }};
+    font-size: {{ section.settings.category_font_size }}px;
+    font-weight: {{ section.settings.category_font_weight }};
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    line-height: 1;
+  }
+  .rr-journal__cat:hover { opacity: 0.85; }
+  .rr-journal__cat--active {
+    background: var(--category-active-bg);
+    color: var(--category-active-text);
+  }
+
+  .rr-journal__cats--desktop { display: flex; }
+  .rr-journal__cats--mobile  { display: none; }
+
+  /* GRID */
+  .rr-journal__grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+    gap: {{ section.settings.grid_gap }}px;
+  }
+
+  /* CARD */
+  .rr-journal__card {
+    background: var(--card-bg);
+    border: {{ section.settings.card_border_width }}px solid {{ section.settings.card_border }};
+    border-radius: {{ section.settings.card_roundedness }}px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+  }
+  .rr-journal__card.hidden { display: none !important; }
+  .rr-journal__card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .rr-journal__link {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* IMAGE — padded inside card with rounded corners, matches Figma */
+  .rr-journal__media {
+    width: calc(100% - 24px) !important;
+    height: {{ section.settings.image_height }}px !important;
+    background: var(--image-bg) !important;
+    overflow: hidden !important;
+    display: block !important;
+    margin: 12px 12px 0 12px !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+    border-radius: {{ section.settings.card_roundedness }}px !important;
+  }
+  .rr-journal__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+  .rr-journal__card:hover .rr-journal__img { transform: scale(1.03); }
+  .rr-journal__placeholder {
+    width: 100%; height: 100%;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,.04) 1px, transparent 1px) 0 0 / 40px 40px,
+      linear-gradient(0deg, rgba(0,0,0,.04) 1px, transparent 1px) 0 0 / 40px 40px,
+      #f0ede9;
+  }
+
+  /* CARD BODY — consistent 20px padding all sides */
+  .rr-journal__body {
+    padding: 20px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Card heading — 20px fixed */
+  .rr-journal__h3 {
+    margin: 0 0 8px 0 !important;
+    padding: 0 !important;
+    color: var(--title);
+    font-family: {{ section.settings.card_title_font }};
+    font-size: 20px !important;
+    line-height: 1.3 !important;
+    font-weight: {{ section.settings.card_title_weight }};
+  }
+
+  /* Card excerpt — 18px fixed */
+  .rr-journal__excerpt {
+    margin: 0 0 {{ section.settings.card_excerpt_margin_bottom }}px 0 !important;
+    padding: 0 !important;
+    color: var(--text);
+    font-family: {{ section.settings.card_text_font }};
+    font-size: 18px !important;
+    font-weight: {{ section.settings.card_text_weight }};
+    line-height: 1.6 !important;
+    flex: 1;
+  }
+
+  /* Card button — 10px vertical, 20px horizontal */
+  .rr-journal__btn {
+    display: inline-block !important;
+    padding: 10px 20px !important;
+    background: var(--btn-bg) !important;
+    color: var(--btn-text) !important;
+    border-radius: {{ section.settings.card_button_roundedness }}px !important;
+    font-family: {{ section.settings.card_button_font }};
+    font-size: {{ section.settings.card_button_size }}px !important;
+    font-weight: {{ section.settings.card_button_weight }};
+    transition: opacity 0.2s ease;
+    align-self: flex-start;
+  }
+  .rr-journal__card:hover .rr-journal__btn { opacity: 0.85; }
+
+  /* TABLET */
+  @media (max-width: 900px) {
+    .rr-journal { padding: 60px 20px; }
+    .rr-journal__h2 { font-size: 26px !important; }
+    .rr-journal__grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  }
+
+  /* MOBILE */
+  @media (max-width: 600px) {
+    .rr-journal { padding: 40px 14px 44px; }
+
+    .rr-journal__cats--desktop { display: none !important; }
+    .rr-journal__cats--mobile {
+      display: flex !important;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .rr-journal__cats--mobile .rr-journal__cat {
+      padding: 8px 14px;
+      font-size: 12.5px;
+      border-radius: 20px;
+    }
+
+    .rr-journal__grid .rr-journal__card:nth-child(n+4) { display: none !important; }
+
+    .rr-journal__head { margin-bottom: 18px; }
+    .rr-journal__h2 { font-size: 22px !important; margin-bottom: 10px !important; }
+    .rr-journal__sub { font-size: 14px; line-height: 1.55; }
+
+    .rr-journal__grid { grid-template-columns: 1fr !important; gap: 18px; }
+
+    .rr-journal__media {
+      width: calc(100% - 24px) !important;
+      height: 200px !important;
+      margin: 12px 12px 0 12px !important;
+      border-radius: {{ section.settings.card_roundedness }}px !important;
+    }
+
+    .rr-journal__body {
+      padding: 20px !important;
+      align-items: flex-start;
+      text-align: left;
+    }
+    .rr-journal__h3 { font-size: 18px !important; margin-bottom: 6px !important; text-align: left; }
+    .rr-journal__excerpt { font-size: 15px !important; text-align: left; line-height: 1.6 !important; }
+    .rr-journal__btn { align-self: flex-start; padding: 9px 18px !important; }
+  }
+</style>
+
+<script>
+(function() {
+  'use strict';
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+  function init() {
+    var allNavs = document.querySelectorAll('.rr-journal__cats');
+    var cards = document.querySelectorAll('.rr-journal__card');
+    if (!allNavs.length || !cards.length) return;
+
+    allNavs.forEach(function(nav) {
+      var buttons = nav.querySelectorAll('.rr-journal__cat');
+      buttons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          allNavs.forEach(function(n) {
+            n.querySelectorAll('.rr-journal__cat').forEach(function(b) {
+              if (b.getAttribute('data-filter') === btn.getAttribute('data-filter')) {
+                b.classList.add('rr-journal__cat--active');
+              } else {
+                b.classList.remove('rr-journal__cat--active');
+              }
+            });
+          });
+
+          var filter = btn.getAttribute('data-filter');
+          cards.forEach(function(card) {
+            if (filter === 'all' || card.getAttribute('data-category') === filter) {
+              card.classList.remove('hidden');
+              card.style.display = '';
+            } else {
+              card.classList.add('hidden');
+              card.style.display = 'none';
+            }
+          });
+        });
+      });
+    });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Root Reboot Journal",
+  "settings": [
+    { "type": "header", "content": "Section Settings" },
+    { "type": "color", "id": "bg_color", "label": "Section Background", "default": "#FFFFFF" },
+    { "type": "range", "id": "section_padding_top", "label": "Section Padding Top", "min": 0, "max": 150, "step": 5, "unit": "px", "default": 80 },
+    { "type": "range", "id": "section_padding_bottom", "label": "Section Padding Bottom", "min": 40, "max": 150, "step": 5, "unit": "px", "default": 80 },
+    { "type": "range", "id": "max_width", "label": "Maximum Width", "min": 1000, "max": 1400, "step": 50, "unit": "px", "default": 1200 },
+    { "type": "header", "content": "Header" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The Root Reboot Journal" },
+    { "type": "select", "id": "title_font", "label": "Title Font", "options": [{ "value": "'Playfair Display', serif", "label": "Playfair Display" }, { "value": "'Figtree', sans-serif", "label": "Figtree" }], "default": "'Playfair Display', serif" },
+    { "type": "range", "id": "title_size", "label": "Title Size", "min": 24, "max": 60, "step": 2, "unit": "px", "default": 32 },
+    { "type": "select", "id": "title_weight", "label": "Title Weight", "options": [{ "value": "300", "label": "Light" }, { "value": "400", "label": "Regular" }, { "value": "500", "label": "Medium" }, { "value": "600", "label": "Semi-bold" }, { "value": "700", "label": "Bold" }], "default": "400" },
+    { "type": "color", "id": "title_color", "label": "Title Color", "default": "#2c2c2c" },
+    { "type": "range", "id": "title_margin_bottom", "label": "Title Margin Bottom", "min": 8, "max": 32, "step": 2, "unit": "px", "default": 12 },
+    { "type": "range", "id": "header_margin_bottom", "label": "Header Margin Bottom", "min": 20, "max": 60, "step": 2, "unit": "px", "default": 24 },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "A collection of stories, tips, and rituals — grounded in heritage and crafted for modern hair wellness, with consistency at the core." },
+    { "type": "select", "id": "subtitle_font", "label": "Subtitle Font", "options": [{ "value": "'Playfair Display', serif", "label": "Playfair Display" }, { "value": "'Figtree', sans-serif", "label": "Figtree" }], "default": "'Figtree', sans-serif" },
+    { "type": "range", "id": "subtitle_size", "label": "Subtitle Size", "min": 12, "max": 20, "step": 1, "unit": "px", "default": 15 },
+    { "type": "select", "id": "subtitle_weight", "label": "Subtitle Weight", "options": [{ "value": "300", "label": "Light" }, { "value": "400", "label": "Regular" }, { "value": "500", "label": "Medium" }, { "value": "600", "label": "Semi-bold" }], "default": "400" },
+    { "type": "color", "id": "text_color", "label": "Text Color", "default": "#5a5a5a" },
+    { "type": "header", "content": "Categories" },
+    { "type": "checkbox", "id": "show_categories", "label": "Show Categories", "default": true },
+    { "type": "select", "id": "category_font", "label": "Category Font", "options": [{ "value": "'Playfair Display', serif", "label": "Playfair Display" }, { "value": "'Figtree', sans-serif", "label": "Figtree" }], "default": "'Figtree', sans-serif" },
+    { "type": "range", "id": "category_font_size", "label": "Category Font Size", "min": 12, "max": 18, "step": 1, "unit": "px", "default": 14 },
+    { "type": "select", "id": "category_font_weight", "label": "Category Weight", "options": [{ "value": "400", "label": "Regular" }, { "value": "500", "label": "Medium" }, { "value": "600", "label": "Semi-bold" }], "default": "500" },
+    { "type": "color", "id": "category_bg", "label": "Category Background", "default": "#F5F3F0" },
+    { "type": "color", "id": "category_text", "label": "Category Text", "default": "#2c2c2c" },
+    { "type": "color", "id": "category_active_bg", "label": "Active Background", "default": "#912643" },
+    { "type": "color", "id": "category_active_text", "label": "Active Text", "default": "#FFFFFF" },
+    { "type": "range", "id": "category_padding_vertical", "label": "Category Padding V", "min": 6, "max": 20, "step": 1, "unit": "px", "default": 10 },
+    { "type": "range", "id": "category_padding_horizontal", "label": "Category Padding H", "min": 12, "max": 40, "step": 2, "unit": "px", "default": 20 },
+    { "type": "range", "id": "category_roundedness", "label": "Category Roundedness", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 8 },
+    { "type": "range", "id": "category_gap", "label": "Category Gap", "min": 8, "max": 24, "step": 2, "unit": "px", "default": 12 },
+    { "type": "range", "id": "category_margin_bottom", "label": "Category Margin Bottom", "min": 20, "max": 60, "step": 2, "unit": "px", "default": 40 },
+    { "type": "header", "content": "Grid" },
+    { "type": "range", "id": "columns_desktop", "label": "Columns", "min": 2, "max": 4, "step": 1, "default": 3 },
+    { "type": "range", "id": "grid_gap", "label": "Grid Gap", "min": 16, "max": 48, "step": 2, "unit": "px", "default": 24 },
+    { "type": "header", "content": "Cards" },
+    { "type": "color", "id": "card_bg", "label": "Card Background", "default": "#FFFFFF" },
+    { "type": "color", "id": "card_border", "label": "Card Border", "default": "#e5e5e5" },
+    { "type": "range", "id": "card_border_width", "label": "Border Width", "min": 0, "max": 4, "step": 1, "unit": "px", "default": 1 },
+    { "type": "range", "id": "card_roundedness", "label": "Card Roundedness", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 12 },
+    { "type": "color", "id": "image_bg_color", "label": "Image Background", "default": "#F9F7F4" },
+    { "type": "range", "id": "image_height", "label": "Image Height", "min": 150, "max": 400, "step": 10, "unit": "px", "default": 260 },
+    { "type": "range", "id": "image_padding", "label": "Image Padding", "min": 0, "max": 60, "step": 5, "unit": "px", "default": 0 },
+    { "type": "range", "id": "card_content_padding", "label": "Content Padding", "min": 16, "max": 40, "step": 2, "unit": "px", "default": 24 },
+    { "type": "header", "content": "Card Text" },
+    { "type": "select", "id": "card_title_font", "label": "Title Font", "options": [{ "value": "'Playfair Display', serif", "label": "Playfair Display" }, { "value": "'Figtree', sans-serif", "label": "Figtree" }], "default": "'Playfair Display', serif" },
+    { "type": "range", "id": "card_title_size", "label": "Title Size", "min": 16, "max": 28, "step": 1, "unit": "px", "default": 20 },
+    { "type": "select", "id": "card_title_weight", "label": "Title Weight", "options": [{ "value": "400", "label": "Regular" }, { "value": "500", "label": "Medium" }, { "value": "600", "label": "Semi-bold" }], "default": "400" },
+    { "type": "range", "id": "card_title_margin_bottom", "label": "Title Margin", "min": 4, "max": 24, "step": 2, "unit": "px", "default": 8 },
+    { "type": "select", "id": "card_text_font", "label": "Text Font", "options": [{ "value": "'Playfair Display', serif", "label": "Playfair Display" }, { "value": "'Figtree', sans-serif", "label": "Figtree" }], "default": "'Figtree', sans-serif" },
+    { "type": "range", "id": "card_text_size", "label": "Text Size", "min": 12, "max": 20, "step": 1, "unit": "px", "default": 18 },
+    { "type": "select", "id": "card_text_weight", "label": "Text Weight", "options": [{ "value": "300", "label": "Light" }, { "value": "400", "label": "Regular" }, { "value": "500", "label": "Medium" }], "default": "400" },
+    { "type": "range", "id": "card_excerpt_margin_bottom", "label": "Excerpt Margin", "min": 12, "max": 32, "step": 2, "unit": "px", "default": 16 },
+    { "type": "header", "content": "Button" },
+    { "type": "color", "id": "button_bg", "label": "Button Background", "default": "#912643" },
+    { "type": "color", "id": "button_text", "label": "Button Text", "default": "#FFFFFF" },
+    { "type": "select", "id": "card_button_font", "label": "Button Font", "options": [{ "value": "'Playfair Display', serif", "label": "Playfair Display" }, { "value": "'Figtree', sans-serif", "label": "Figtree" }], "default": "'Figtree', sans-serif" },
+    { "type": "range", "id": "card_button_size", "label": "Button Size", "min": 11, "max": 16, "step": 1, "unit": "px", "default": 13 },
+    { "type": "select", "id": "card_button_weight", "label": "Button Weight", "options": [{ "value": "400", "label": "Regular" }, { "value": "500", "label": "Medium" }, { "value": "600", "label": "Semi-bold" }], "default": "600" },
+    { "type": "range", "id": "card_button_padding_vertical", "label": "Button Padding V", "min": 6, "max": 20, "step": 1, "unit": "px", "default": 10 },
+    { "type": "range", "id": "card_button_padding_horizontal", "label": "Button Padding H", "min": 12, "max": 32, "step": 2, "unit": "px", "default": 20 },
+    { "type": "range", "id": "card_button_roundedness", "label": "Button Roundedness", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 6 }
+  ],
+  "blocks": [
+    {
+      "type": "article",
+      "name": "Article",
+      "settings": [
+        { "type": "select", "id": "category", "label": "Category", "options": [{ "value": "routine", "label": "Routine" }, { "value": "hair-wellness", "label": "Hair Wellness" }, { "value": "ingredients", "label": "Ingredients" }, { "value": "scalp-care", "label": "Scalp Care" }, { "value": "community", "label": "Community" }], "default": "routine" },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Article Title" },
+        { "type": "textarea", "id": "excerpt", "label": "Excerpt", "default": "A brief description." },
+        { "type": "text", "id": "button_label", "label": "Button Label", "default": "Read More" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Root Reboot Journal" }]
+}
+{% endschema %}

@@ -1,0 +1,296 @@
+{% comment %} 
+FAQ Accordion Section - Quick Answers 
+Collapsible FAQ items with questions and answers 
+{% endcomment %}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Figtree:wght@400;500;600&display=swap');
+
+  .faq-accordion-section {
+    padding: 100px 20px 60px !important; /* top 100px, bottom 60px — hardcoded */
+    {% if section.settings.bg_type == 'image' and section.settings.bg_image %}
+      background-image: url('{{ section.settings.bg_image | img_url: 'master' }}');
+      background-position: {{ section.settings.bg_position }};
+      background-size: {{ section.settings.bg_size }};
+      background-repeat: {{ section.settings.bg_repeat }};
+      {% if section.settings.bg_fixed %}background-attachment: fixed;{% endif %}
+    {% else %}
+      background-color: {{ section.settings.bg_color }};
+    {% endif %}
+    position: relative;
+  }
+
+  {% if section.settings.overlay_opacity > 0 %}
+  .faq-accordion-section::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: {{ section.settings.overlay_color }};
+    opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    pointer-events: none;
+  }
+  {% endif %}
+
+  .faq-accordion-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* DESKTOP: header → cards 48px */
+  .faq-header {
+    text-align: center;
+    margin-bottom: 48px !important;
+  }
+
+  /* Main heading — 32px fixed */
+  .faq-title {
+    font-size: 32px !important;
+    font-family: 'Playfair Display', Georgia, serif !important;
+    font-weight: {{ section.settings.title_font_weight }};
+    color: {{ section.settings.title_color }};
+    margin: 0 0 12px 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Subtitle — 18px fixed */
+  .faq-subtitle {
+    font-size: 18px !important;
+    color: {{ section.settings.subtitle_color }};
+    line-height: 1.6;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* DESKTOP: 24px between cards */
+  .faq-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 24px !important;
+  }
+
+  .faq-item {
+    background-color: {{ section.settings.card_bg_color }};
+    border-radius: 8px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .faq-item:hover { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+
+  .faq-question-wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    cursor: pointer;
+    gap: 16px;
+  }
+
+  .faq-question-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex: 1;
+  }
+
+  .faq-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+
+  .faq-icon img { width: 100%; height: 100%; object-fit: contain; }
+  .faq-icon svg { width: 100%; height: 100%; fill: {{ section.settings.icon_color }}; }
+
+  /* Question — 20px fixed */
+  .faq-question {
+    font-size: 20px !important;
+    font-weight: 400 !important;
+    font-family: 'Playfair Display', Georgia, serif !important;
+    color: {{ section.settings.question_color }};
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: left;
+    line-height: 1.5;
+  }
+
+  .faq-toggle {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+    margin-top: 2px;
+  }
+
+  .faq-toggle svg { width: 100%; height: 100%; stroke: {{ section.settings.toggle_color }}; }
+  .faq-item.active .faq-toggle { transform: rotate(180deg); }
+
+  .faq-answer-wrapper {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  /* Answer text — 18px fixed */
+  .faq-answer {
+    padding: 12px 0 0 32px;
+    font-size: 18px !important;
+    line-height: 1.6;
+    color: {{ section.settings.answer_color }};
+  }
+
+  .faq-item.active .faq-answer-wrapper { max-height: 500px; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    .faq-accordion-section {
+      padding: 100px 16px 60px !important;
+    }
+
+    .faq-title {
+      font-size: 26px !important;
+      margin-bottom: 12px !important; /* mobile: heading → subtitle 12px */
+    }
+
+    .faq-subtitle {
+      font-size: 16px !important;
+    }
+
+    .faq-header {
+      margin-bottom: 32px !important; /* mobile: subtitle → cards 32px */
+    }
+
+    .faq-list {
+      gap: 16px !important; /* mobile: 16px between cards */
+    }
+
+    .faq-item { padding: 16px 20px; }
+    .faq-question { font-size: 17px !important; }
+    .faq-answer { padding-left: 32px; font-size: 15px !important; }
+  }
+</style>
+
+<div class="faq-accordion-section">
+  <div class="faq-accordion-container">
+    <div class="faq-header">
+      <h2 class="faq-title">{{ section.settings.title }}</h2>
+      {% if section.settings.subtitle != blank %}
+        <p class="faq-subtitle">{{ section.settings.subtitle }}</p>
+      {% endif %}
+    </div>
+
+    <ul class="faq-list">
+      {% for block in section.blocks %}
+        {% if block.type == 'faq_item' %}
+          <li class="faq-item" {{ block.shopify_attributes }}>
+            <div class="faq-question-wrapper" onclick="toggleFAQ(this)">
+              <div class="faq-question-content">
+                <div class="faq-icon">
+                  {% if block.settings.icon_image %}
+                    <img src="{{ block.settings.icon_image | img_url: '48x48' }}" alt="FAQ icon">
+                  {% elsif block.settings.icon_svg != blank %}
+                    {{ block.settings.icon_svg }}
+                  {% else %}
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2L2 12L12 22L22 12L12 2Z" fill="#DC2626"/>
+                    </svg>
+                  {% endif %}
+                </div>
+                <h3 class="faq-question">{{ block.settings.question }}</h3>
+              </div>
+              <div class="faq-toggle">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M19 9L12 16L5 9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="faq-answer-wrapper">
+              <div class="faq-answer">{{ block.settings.answer }}</div>
+            </div>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<script>
+  function toggleFAQ(element) {
+    const faqItem = element.closest('.faq-item');
+    const wasActive = faqItem.classList.contains('active');
+
+    {% if section.settings.accordion_behavior %}
+      document.querySelectorAll('.faq-item').forEach(item => {
+        item.classList.remove('active');
+      });
+    {% endif %}
+
+    if (wasActive) {
+      faqItem.classList.remove('active');
+    } else {
+      faqItem.classList.add('active');
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "FAQ Accordion",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Quick Answers" },
+    { "type": "textarea", "id": "subtitle", "label": "Subtitle", "default": "Quick answers to common questions about Root Reboot. If you need more help, reach out to us." },
+    { "type": "checkbox", "id": "accordion_behavior", "label": "Close other items when opening one", "default": true },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "title_color", "label": "Title color", "default": "#000000" },
+    { "type": "select", "id": "title_font_weight", "label": "Title font weight", "default": "500", "options": [{ "value": "300", "label": "Light (300)" }, { "value": "400", "label": "Normal (400)" }, { "value": "500", "label": "Medium (500)" }, { "value": "600", "label": "Semi-bold (600)" }, { "value": "700", "label": "Bold (700)" }] },
+    { "type": "color", "id": "subtitle_color", "label": "Subtitle color", "default": "#666666" },
+    { "type": "color", "id": "card_bg_color", "label": "Card background color", "default": "#F9F9F9" },
+    { "type": "color", "id": "question_color", "label": "Question color", "default": "#000000" },
+    { "type": "color", "id": "answer_color", "label": "Answer color", "default": "#333333" },
+    { "type": "color", "id": "icon_color", "label": "Icon color", "default": "#DC2626" },
+    { "type": "color", "id": "toggle_color", "label": "Toggle arrow color", "default": "#666666" },
+    { "type": "header", "content": "Background" },
+    { "type": "select", "id": "bg_type", "label": "Background type", "default": "color", "options": [{ "value": "color", "label": "Color" }, { "value": "image", "label": "Image" }] },
+    { "type": "color", "id": "bg_color", "label": "Background color", "default": "#ffffff" },
+    { "type": "image_picker", "id": "bg_image", "label": "Background image" },
+    { "type": "select", "id": "bg_position", "label": "Image position", "default": "center", "options": [{ "value": "left top", "label": "Left top" }, { "value": "left center", "label": "Left center" }, { "value": "left bottom", "label": "Left bottom" }, { "value": "center top", "label": "Center top" }, { "value": "center", "label": "Center" }, { "value": "center bottom", "label": "Center bottom" }, { "value": "right top", "label": "Right top" }, { "value": "right center", "label": "Right center" }, { "value": "right bottom", "label": "Right bottom" }] },
+    { "type": "select", "id": "bg_size", "label": "Image size", "default": "cover", "options": [{ "value": "cover", "label": "Cover" }, { "value": "contain", "label": "Contain" }] },
+    { "type": "select", "id": "bg_repeat", "label": "Image repeat", "default": "no-repeat", "options": [{ "value": "no-repeat", "label": "No repeat" }, { "value": "repeat", "label": "Repeat" }] },
+    { "type": "checkbox", "id": "bg_fixed", "label": "Fixed background (parallax effect)", "default": false },
+    { "type": "color", "id": "overlay_color", "label": "Overlay color", "default": "#ffffff" },
+    { "type": "range", "id": "overlay_opacity", "label": "Overlay opacity", "min": 0, "max": 90, "step": 5, "unit": "%", "default": 0 }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "Is Root Reboot suitable for all hair types?" },
+        { "type": "textarea", "id": "answer", "label": "Answer", "default": "Yes, Root Reboot is formulated to work across different hair types and textures." },
+        { "type": "header", "content": "Icon" },
+        { "type": "image_picker", "id": "icon_image", "label": "Icon image", "info": "Upload your own icon (recommended size: 48x48px)" },
+        { "type": "html", "id": "icon_svg", "label": "Icon SVG code", "info": "Paste SVG code here if you prefer to use SVG instead of an image." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ Accordion",
+      "blocks": [
+        { "type": "faq_item", "settings": { "question": "Is Root Reboot suitable for all hair types?", "answer": "Yes, Root Reboot is formulated to work across different hair types and textures." } },
+        { "type": "faq_item", "settings": { "question": "How long does it take to see results?", "answer": "Most customers notice improvements within 2-4 weeks of consistent use." } },
+        { "type": "faq_item", "settings": { "question": "How often should I use Root Reboot?", "answer": "For best results, we recommend using Root Reboot 2-3 times per week." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

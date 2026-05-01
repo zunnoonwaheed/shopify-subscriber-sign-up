@@ -1,0 +1,587 @@
+{% comment %}
+  Rooted in Ingredients Section
+  Displays ingredient cards with images and descriptions
+{% endcomment %}
+
+<style>
+  .rooted-ingredients {
+    background: {{ section.settings.section_bg_color }};
+    padding: 100px 20px 0 !important; /* TOP: 100px, BOTTOM: 0 */
+  }
+
+  .ingredients-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* DESKTOP header: text→button 28px, button→cards 48px */
+  .ingredients-header {
+    text-align: center;
+    margin-bottom: 48px !important; /* DESKTOP: 48px button → cards */
+  }
+
+  .ingredients-title {
+    font-size: {{ section.settings.heading_size | default: 42 }}px;
+    font-weight: 200;
+    color: #2c2c2c;
+    margin-bottom: 10px !important;
+    font-family: 'Playfair Display', 'Georgia', serif;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    white-space: normal;
+  }
+
+  .ingredients-title em { font-style: italic; font-weight: 200; }
+
+  .ingredients-subtitle {
+    font-size: 15.5px;
+    color: #5a5a5a;
+    max-width: 720px;
+    margin: 0 auto 28px !important; /* DESKTOP: 28px text → button */
+    line-height: 1.6;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    white-space: normal;
+    font-family: 'Figtree', -apple-system, sans-serif;
+    {% if section.settings.hide_subtitle %}display: none;{% endif %}
+  }
+
+  .ingredients-cta,
+  .how-to-use-cta {
+    display: inline-block !important;
+    background: {{ section.settings.button_bg_color }};
+    color: #fff !important;
+    padding: 14px 26px !important;
+    border-radius: {{ section.settings.button_roundedness }}px !important;
+    text-decoration: none !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    transition: background 0.2s ease, opacity 0.2s ease;
+    border: none !important;
+    cursor: pointer;
+    white-space: nowrap !important;
+    text-align: center !important;
+    letter-spacing: 0.02em !important;
+    margin-top: 0 !important;
+    width: auto !important;
+    max-width: fit-content !important;
+    align-self: center !important;
+  }
+
+  .ingredients-cta:hover,
+  .how-to-use-cta:hover { background: #7a1827; opacity: 0.95; }
+
+  .ingredients-cta {
+    {% if section.settings.hide_cta %}display: none;{% endif %}
+  }
+
+  /* Grid wrap */
+  .ingredients-grid-wrap {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* DESKTOP: 20px between cards */
+  .ingredients-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+    gap: 20px !important; /* DESKTOP: 20px between cards */
+    margin-bottom: 0 !important;
+  }
+
+  .ingredient-card {
+    background: {{ section.settings.card_bg_color }};
+    border-radius: {{ section.settings.card_roundedness }}px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .ingredient-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+
+  .ingredient-content { padding: 24px !important; }
+
+  .ingredient-name {
+    font-size: 18px !important;
+    font-weight: 400 !important;
+    color: #2c2c2c !important;
+    margin-bottom: 4px !important;
+    font-family: 'Playfair Display', 'Georgia', serif !important;
+    letter-spacing: -0.01em !important;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    white-space: normal;
+  }
+
+  .ingredient-description {
+    font-size: 14px !important;
+    color: #5a5a5a !important;
+    line-height: 1.5 !important;
+    margin-bottom: 16px !important;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    white-space: normal;
+    font-family: 'Figtree', -apple-system, sans-serif !important;
+  }
+
+  .ingredient-image {
+    width: 100%;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    border-radius: {{ section.settings.image_roundedness }}px;
+    margin-top: 16px !important;
+  }
+
+  .ingredient-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .how-to-use { text-align: center; margin-top: 60px !important; }
+
+  .how-to-use-title {
+    font-size: {{ section.settings.heading_size | default: 42 }}px;
+    font-weight: 200;
+    color: #2c2c2c;
+    margin-bottom: 12px !important;
+    font-family: 'Playfair Display', 'Georgia', serif;
+    letter-spacing: 0.01em;
+    line-height: 1.2;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    white-space: normal;
+  }
+
+  .how-to-use-title em { font-style: italic; font-weight: 200; }
+
+  .how-to-use-subtitle {
+    font-size: 15.5px;
+    color: #5a5a5a;
+    max-width: 650px;
+    margin: 0 auto 30px !important;
+    line-height: 1.6;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    white-space: normal;
+    font-family: 'Figtree', -apple-system, sans-serif;
+  }
+
+  /* Dots — hidden on desktop */
+  .ingredients-dots { display: none; }
+
+  @media (max-width: 968px) {
+    .rooted-ingredients { padding: 100px 20px 0 !important; }
+    .ingredients-title { font-size: min(36px, calc({{ section.settings.heading_size | default: 42 }}px * 0.85)); font-weight: 200; }
+    .how-to-use-title { font-size: min(36px, calc({{ section.settings.heading_size | default: 42 }}px * 0.85)); font-weight: 200; }
+    .ingredients-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+  }
+
+  @media (max-width: 768px) {
+    .rooted-ingredients {
+      padding: 100px 20px 0 !important; /* MOBILE TOP: 100px, BOTTOM: 0 */
+      overflow-x: hidden;
+    }
+
+    .ingredients-container { overflow-x: hidden; }
+
+    /* MOBILE header spacing */
+    .ingredients-header {
+      margin-bottom: 40px !important; /* MOBILE: 40px button → cards */
+      padding: 0 10px;
+      text-align: center;
+    }
+
+    .ingredients-title {
+      font-size: clamp(28px, calc({{ section.settings.heading_size | default: 42 }}px * 0.8), 40px);
+      font-weight: 200;
+      margin-bottom: 12px !important; /* MOBILE: 12px heading → subtext */
+      line-height: 1.2;
+      letter-spacing: 0.01em;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+      white-space: normal;
+    }
+    .ingredients-title em { font-weight: 200; }
+
+    /* MOBILE: 28px subtext → button */
+    .ingredients-subtitle {
+      font-size: 15.5px;
+      line-height: 1.6;
+      margin-bottom: 28px !important; /* MOBILE: 28px text → button */
+      padding: 0 5px;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+      white-space: normal;
+    }
+
+    .ingredients-cta,
+    .how-to-use-cta {
+      padding: 13px 22px !important;
+      font-size: 14px !important;
+      font-weight: 500 !important;
+      border-radius: {{ section.settings.button_roundedness }}px !important;
+      white-space: nowrap !important;
+    }
+
+    .ingredients-grid-wrap { overflow: visible; }
+
+    /* Horizontal scroll carousel */
+    .ingredients-grid {
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      scroll-snap-type: x mandatory !important;
+      scroll-behavior: smooth !important;
+      -webkit-overflow-scrolling: touch !important;
+      gap: 16px !important;
+      scrollbar-width: none !important;
+      padding-bottom: 8px !important;
+      margin: 0 !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    .ingredients-grid::-webkit-scrollbar { display: none; }
+
+    .ingredient-card {
+      flex: 0 0 100% !important;
+      width: 100% !important;
+      min-width: 100% !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+      scroll-snap-align: center !important;
+      scroll-snap-stop: always !important;
+      border-radius: 16px !important;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08) !important;
+      border: 1px solid rgba(0,0,0,0.06) !important;
+      overflow: hidden !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      text-align: center !important;
+    }
+
+    .ingredient-content { padding: 28px 24px !important; text-align: center; width: 100%; box-sizing: border-box; }
+
+    .ingredient-name {
+      font-size: 18px !important;
+      font-weight: 400 !important;
+      margin-bottom: 4px !important;
+      line-height: 1.35 !important;
+      letter-spacing: -0.01em !important;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .ingredient-description {
+      font-size: 14px !important;
+      line-height: 1.5 !important;
+      margin-bottom: 20px !important;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+      white-space: normal;
+      font-family: 'Figtree', -apple-system, sans-serif;
+      text-align: center;
+    }
+
+    .ingredient-image { border-radius: 12px !important; margin-top: 20px !important; padding: 0 !important; overflow: hidden; }
+    .ingredient-image img { border-radius: 12px; }
+
+    /* Dots — visible on mobile */
+    .ingredients-dots {
+      display: flex !important;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px !important;
+      padding: 0;
+    }
+
+    .ingredients-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(0,0,0,0.18);
+      border: none; padding: 0; cursor: pointer; flex-shrink: 0;
+      transition: background 0.25s ease, transform 0.25s ease;
+    }
+
+    .ingredients-dot--active {
+      background: {{ section.settings.button_bg_color }};
+      transform: scale(1.35);
+    }
+
+    .how-to-use { margin-top: 30px !important; text-align: center; }
+
+    .how-to-use-title {
+      font-size: clamp(28px, calc({{ section.settings.heading_size | default: 42 }}px * 0.8), 40px);
+      font-weight: 200;
+      margin-bottom: 16px !important;
+      line-height: 1.2;
+      letter-spacing: 0.01em;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+      white-space: normal;
+    }
+    .how-to-use-title em { font-weight: 200; }
+    .how-to-use-subtitle { font-size: 15px; margin-bottom: 28px !important; word-break: keep-all; overflow-wrap: break-word; white-space: normal; }
+  }
+
+  @media (max-width: 640px) {
+    .rooted-ingredients { padding: 100px 16px 0 !important; }
+
+    .ingredients-header { margin-bottom: 40px !important; padding: 0; text-align: center; }
+
+    .ingredients-title {
+      font-size: clamp(26px, calc({{ section.settings.heading_size | default: 42 }}px * 0.72), 36px);
+      font-weight: 200;
+      margin-bottom: 10px !important;
+      word-break: keep-all; overflow-wrap: break-word; white-space: normal;
+    }
+    .ingredients-title em { font-weight: 200; }
+
+    .ingredients-subtitle {
+      font-size: 15px !important;
+      margin-bottom: 28px !important; /* MOBILE: 28px text → button */
+      padding: 0;
+      word-break: keep-all; overflow-wrap: break-word; white-space: normal;
+    }
+
+    .ingredients-cta,
+    .how-to-use-cta {
+      padding: 12px 20px !important;
+      font-size: 13px !important;
+      font-weight: 500 !important;
+      border-radius: {{ section.settings.button_roundedness }}px !important;
+      white-space: nowrap !important;
+    }
+
+    .ingredients-grid { gap: 16px !important; margin: 0 !important; padding-left: 0 !important; padding-right: 0 !important; }
+
+    .ingredient-card { width: 100% !important; min-width: 100% !important; max-width: 100% !important; }
+    .ingredient-content { padding: 24px 20px !important; }
+    .ingredient-name { font-size: 17px !important; font-weight: 400 !important; margin-bottom: 4px !important; letter-spacing: -0.01em !important; word-break: keep-all; overflow-wrap: break-word; white-space: normal; }
+    .ingredient-description { font-size: 14px !important; line-height: 1.5 !important; margin-bottom: 18px !important; word-break: keep-all; overflow-wrap: break-word; white-space: normal; font-family: 'Figtree', -apple-system, sans-serif; }
+    .ingredient-image { margin-top: 18px !important; }
+
+    .how-to-use-title {
+      font-size: clamp(26px, calc({{ section.settings.heading_size | default: 42 }}px * 0.72), 36px);
+      font-weight: 200;
+      line-height: 1.2;
+      letter-spacing: 0.01em;
+      word-break: keep-all; overflow-wrap: break-word; white-space: normal;
+    }
+    .how-to-use-title em { font-weight: 200; }
+    .how-to-use-subtitle { font-size: 14px; word-break: keep-all; overflow-wrap: break-word; white-space: normal; }
+
+    .ingredients-dots { margin-top: 12px !important; gap: 7px !important; }
+    .ingredients-dot { width: 7px !important; height: 7px !important; }
+  }
+</style>
+
+<section class="rooted-ingredients">
+  <div class="ingredients-container">
+    <!-- Main Header -->
+    <div class="ingredients-header">
+      <h2 class="ingredients-title">
+        {% if section.settings.title != blank %}
+          {{ section.settings.title }}
+        {% else %}
+          {{ section.settings.title_before | default: 'Rooted in ' }}<em>{{ section.settings.title_emphasis | default: 'Time-Honored Ingredients' }}</em>
+        {% endif %}
+      </h2>
+      <p class="ingredients-subtitle">
+        {{ section.settings.subtitle | default: 'Root Reboot promotes healthier hair with care, strength, scalp nourishment, and growth.' }}
+      </p>
+      {% if section.settings.button_text != blank %}
+        <a href="{{ section.settings.button_link }}" class="ingredients-cta">
+          {{ section.settings.button_text }}
+        </a>
+      {% endif %}
+    </div>
+
+    <!-- Ingredient Cards + Dots -->
+    <div class="ingredients-grid-wrap">
+      <div class="ingredients-grid" id="ingredients-grid-{{ section.id }}">
+        {% for block in section.blocks %}
+          {% if block.type == 'ingredient' %}
+            <div class="ingredient-card" {{ block.shopify_attributes }}>
+              <div class="ingredient-content">
+                <h3 class="ingredient-name">{{ block.settings.name }}</h3>
+                <p class="ingredient-description">{{ block.settings.description }}</p>
+                <div class="ingredient-image">
+                  {% if block.settings.image != blank %}
+                    {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy', alt: block.settings.name }}
+                  {% else %}
+                    <img src="https://via.placeholder.com/600x450/8B7355/ffffff?text={{ block.settings.name | url_encode }}" alt="{{ block.settings.name }}" loading="lazy">
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {% assign ingredient_count = 0 %}
+      {% for block in section.blocks %}
+        {% if block.type == 'ingredient' %}{% assign ingredient_count = ingredient_count | plus: 1 %}{% endif %}
+      {% endfor %}
+      {% if ingredient_count > 1 %}
+      <div class="ingredients-dots" id="ingredients-dots-{{ section.id }}" aria-label="Ingredient card navigation">
+        {% assign dot_i = 0 %}
+        {% for block in section.blocks %}
+          {% if block.type == 'ingredient' %}
+            <button
+              class="ingredients-dot{% if dot_i == 0 %} ingredients-dot--active{% endif %}"
+              data-index="{{ dot_i }}"
+              aria-label="Go to card {{ dot_i | plus: 1 }}"
+            ></button>
+            {% assign dot_i = dot_i | plus: 1 %}
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- How to Use Section -->
+    {% if section.settings.show_how_to_use %}
+      <div class="how-to-use">
+        <h2 class="how-to-use-title">
+          {% if section.settings.how_to_title != blank %}
+            {{ section.settings.how_to_title }}
+          {% else %}
+            {{ section.settings.how_to_title_before | default: 'How to Use ' }}<em>{{ section.settings.how_to_title_emphasis | default: 'Root Reboot' }}</em>
+          {% endif %}
+        </h2>
+        <p class="how-to-use-subtitle">
+          {{ section.settings.how_to_subtitle | default: 'Root Reboot began a tradition of intentional hair oiling, a ritual that nourishes hair naturally.' }}
+        </p>
+        {% if section.settings.how_to_button_text != blank %}
+          <a href="{{ section.settings.how_to_button_link }}" class="how-to-use-cta">
+            {{ section.settings.how_to_button_text }}
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+(function() {
+  function initIngredientsCarousel(sectionId) {
+    var grid   = document.getElementById('ingredients-grid-' + sectionId);
+    var dotsEl = document.getElementById('ingredients-dots-' + sectionId);
+    if (!grid || !dotsEl) return;
+
+    var dots    = Array.from(dotsEl.querySelectorAll('.ingredients-dot'));
+    var cardEls = Array.from(grid.querySelectorAll('.ingredient-card'));
+    var total   = cardEls.length;
+    if (total < 2) return;
+
+    var current = 0, ticking = false;
+
+    function setActive(index) {
+      dots[current].classList.remove('ingredients-dot--active');
+      current = index;
+      dots[current].classList.add('ingredients-dot--active');
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function() {
+        var containerLeft = grid.scrollLeft;
+        var closest = 0, minDist = Infinity;
+        cardEls.forEach(function(card, i) {
+          var dist = Math.abs(card.offsetLeft - containerLeft);
+          if (dist < minDist) { minDist = dist; closest = i; }
+        });
+        setActive(closest);
+        ticking = false;
+      });
+    }
+
+    grid.addEventListener('scroll', onScroll, { passive: true });
+
+    dots.forEach(function(dot, i) {
+      dot.addEventListener('click', function() {
+        var target = cardEls[i];
+        if (!target) return;
+        grid.scrollTo({ left: target.offsetLeft, behavior: 'smooth' });
+        setActive(i);
+      });
+    });
+
+    dotsEl.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowRight' && current < total - 1) dots[current + 1].click();
+      if (e.key === 'ArrowLeft'  && current > 0)         dots[current - 1].click();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() { initIngredientsCarousel('{{ section.id }}'); });
+  } else {
+    initIngredientsCarousel('{{ section.id }}');
+  }
+
+  document.addEventListener('shopify:section:load', function(e) {
+    if (e.detail && e.detail.sectionId === '{{ section.id }}') initIngredientsCarousel('{{ section.id }}');
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Rooted in Ingredients",
+  "settings": [
+    { "type": "header", "content": "Section Styling" },
+    { "type": "color_background", "id": "section_bg_color", "label": "Section Background", "default": "linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(248, 245, 240, 1) 100%)" },
+    { "type": "color", "id": "card_bg_color", "label": "Card Background Color", "default": "#F9F8F3" },
+    { "type": "range", "id": "card_roundedness", "label": "Card Roundedness", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 16 },
+    { "type": "range", "id": "image_roundedness", "label": "Image Roundedness", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 12 },
+    { "type": "header", "content": "Main Header Section" },
+    { "type": "range", "id": "heading_size", "label": "Heading size", "min": 28, "max": 52, "step": 2, "unit": "px", "default": 42 },
+    { "type": "text", "id": "title_before", "label": "Title (before italic)", "default": "Rooted in " },
+    { "type": "text", "id": "title_emphasis", "label": "Title (italic part)", "default": "Time-Honored Ingredients" },
+    { "type": "html", "id": "title", "label": "Title (optional HTML override)", "info": "Leave blank to use the two fields above." },
+    { "type": "textarea", "id": "subtitle", "label": "Subtitle", "default": "Root Reboot promotes healthier hair with care, strength, scalp nourishment, and growth." },
+    { "type": "checkbox", "id": "hide_subtitle", "label": "Hide Subtitle", "default": false },
+    { "type": "text", "id": "button_text", "label": "Button Text", "default": "Experience the Full Ritual" },
+    { "type": "url", "id": "button_link", "label": "Button Link" },
+    { "type": "checkbox", "id": "hide_cta", "label": "Hide CTA Button", "default": false },
+    { "type": "color", "id": "button_bg_color", "label": "Button Background Color", "default": "#941E31" },
+    { "type": "range", "id": "button_roundedness", "label": "Button Roundedness", "min": 0, "max": 50, "step": 1, "unit": "px", "default": 25 },
+    { "type": "header", "content": "How to Use Section" },
+    { "type": "checkbox", "id": "show_how_to_use", "label": "Show 'How to Use' Section", "default": true },
+    { "type": "text", "id": "how_to_title_before", "label": "How to Use Title (before italic)", "default": "How to Use " },
+    { "type": "text", "id": "how_to_title_emphasis", "label": "How to Use Title (italic part)", "default": "Root Reboot" },
+    { "type": "html", "id": "how_to_title", "label": "How to Use Title (optional HTML override)", "info": "Leave blank to use the two fields above." },
+    { "type": "textarea", "id": "how_to_subtitle", "label": "How to Use Subtitle", "default": "Root Reboot began a tradition of intentional hair oiling, a ritual that nourishes hair naturally." },
+    { "type": "text", "id": "how_to_button_text", "label": "How to Use Button Text", "default": "Add Root Reboot to Your Routine" },
+    { "type": "url", "id": "how_to_button_link", "label": "How to Use Button Link" }
+  ],
+  "blocks": [
+    {
+      "type": "ingredient",
+      "name": "Ingredient Card",
+      "settings": [
+        { "type": "text", "id": "name", "label": "Ingredient Name", "default": "Ingredient Name" },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "Ingredient description and benefits." },
+        { "type": "image_picker", "id": "image", "label": "Ingredient Image" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rooted in Ingredients",
+      "blocks": [
+        { "type": "ingredient", "settings": { "name": "Amla", "description": "Amla strengthens hair, nourishes roots, and boosts scalp health." } },
+        { "type": "ingredient", "settings": { "name": "Bhringraj", "description": "Promotes healthy hair growth and reduces hair fall." } },
+        { "type": "ingredient", "settings": { "name": "Castor Oil", "description": "Castor Oil hydrates the scalp and strengthens hair." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

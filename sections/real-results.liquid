@@ -1,0 +1,374 @@
+{% comment %}
+  Real Results Section
+  Displays customer transformations in a grid with images, quotes, names, and ratings
+{% endcomment %}
+
+<style>
+  .real-results-section {
+    background: {{ section.settings.section_bg_color }};
+    padding: 80px 20px;
+  }
+
+  .results-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .results-header {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+
+  .results-title {
+    font-size: 42px;
+    font-weight: 300;
+    color: #2c2c2c;
+    margin-bottom: 16px;
+    font-family: 'Georgia', serif;
+  }
+
+  .results-subtitle {
+    font-size: 15px;
+    color: #5a5a5a;
+    max-width: 800px;
+    margin: 0 auto 30px;
+    line-height: 1.6;
+  }
+
+  .results-cta {
+    display: inline-block;
+    background: {{ section.settings.button_bg_color }};
+    color: white;
+    padding: 14px 32px;
+    border-radius: {{ section.settings.button_roundedness }}px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    transition: background 0.3s ease;
+  }
+
+  .results-cta:hover {
+    background: #7a1827;
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+  }
+
+  .result-card {
+    background: {{ section.settings.card_bg_color }};
+    border-radius: {{ section.settings.card_roundedness }}px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .result-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  .result-image {
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .result-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .result-content {
+    padding: 20px;
+  }
+
+  .result-quote {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #2c2c2c;
+    margin-bottom: 14px;
+    min-height: 42px;
+  }
+
+  .result-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .result-author {
+    font-size: 14px;
+    color: #5a5a5a;
+    font-weight: 500;
+  }
+
+  .result-rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: #2c2c2c;
+    font-weight: 600;
+  }
+
+  .star-icon {
+    width: 16px;
+    height: 16px;
+    fill: #d4776f;
+  }
+
+  @media (max-width: 968px) {
+    .real-results-section {
+      padding: 60px 20px;
+    }
+
+    .results-title {
+      font-size: 32px;
+    }
+
+    .results-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .results-title {
+      font-size: 28px;
+    }
+
+    .results-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .result-image {
+      height: 320px;
+    }
+
+    .result-content {
+      padding: 18px;
+    }
+
+    .result-quote {
+      font-size: 14px;
+      min-height: 40px;
+    }
+  }
+</style>
+
+<section class="real-results-section">
+  <div class="results-container">
+    <!-- Header -->
+    <div class="results-header">
+      <h2 class="results-title">
+        {{ section.settings.title | default: 'Real Results Through Consistent Care' }}
+      </h2>
+      <p class="results-subtitle">
+        {{ section.settings.subtitle | default: 'These transformations reflect real routines and real timelines — results achieved through patience, care, and consistency.' }}
+      </p>
+      {% if section.settings.button_text != blank %}
+        <a href="{{ section.settings.button_link }}" class="results-cta">
+          {{ section.settings.button_text }}
+        </a>
+      {% endif %}
+    </div>
+
+    <!-- Results Grid -->
+    <div class="results-grid">
+      {% for block in section.blocks %}
+        <div class="result-card" {{ block.shopify_attributes }}>
+          <div class="result-image">
+            {% if block.settings.image != blank %}
+              {{ block.settings.image | image_url: width: 800 | image_tag: loading: 'lazy', alt: block.settings.author_name }}
+            {% else %}
+              <img src="https://via.placeholder.com/800x800/E5E5E5/666666?text=Result+Image" alt="{{ block.settings.author_name }}" loading="lazy">
+            {% endif %}
+          </div>
+          <div class="result-content">
+            <p class="result-quote">"{{ block.settings.quote }}"</p>
+            <div class="result-footer">
+              <div class="result-author">{{ block.settings.author_name }}</div>
+              {% if block.settings.rating != blank %}
+                <div class="result-rating">
+                  <svg class="star-icon" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                  {{ block.settings.rating }}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Real Results",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Styling"
+    },
+    {
+      "type": "color_background",
+      "id": "section_bg_color",
+      "label": "Section Background",
+      "default": "linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(248, 245, 240, 1) 100%)"
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Card Background Color",
+      "default": "#faf8f4"
+    },
+    {
+      "type": "range",
+      "id": "card_roundedness",
+      "label": "Card Roundedness",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Header Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Real Results Through Consistent Care"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "These transformations reflect real routines and real timelines — results achieved through patience, care, and consistency."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "See Real Transformations"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Button Background Color",
+      "default": "#941E31"
+    },
+    {
+      "type": "range",
+      "id": "button_roundedness",
+      "label": "Button Roundedness",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 25
+    }
+  ],
+  "blocks": [
+    {
+      "type": "result",
+      "name": "Result Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Result Image"
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Customer Quote",
+          "default": "Slow, steady, real and best results."
+        },
+        {
+          "type": "text",
+          "id": "author_name",
+          "label": "Customer Name",
+          "default": "Customer Name"
+        },
+        {
+          "type": "text",
+          "id": "rating",
+          "label": "Rating (e.g., 4.8/5.0)",
+          "default": "4.8/5.0"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Real Results",
+      "blocks": [
+        {
+          "type": "result",
+          "settings": {
+            "quote": "Slow, steady, real and best results.",
+            "author_name": "Sophia C.",
+            "rating": "4.8/5.0"
+          }
+        },
+        {
+          "type": "result",
+          "settings": {
+            "quote": "Exceeding expectations at every turn with the right ingredients.",
+            "author_name": "Emma L.",
+            "rating": "4.9/5.0"
+          }
+        },
+        {
+          "type": "result",
+          "settings": {
+            "quote": "Finally something that fits my routine.",
+            "author_name": "Amir Johnson",
+            "rating": "4.8/5.0"
+          }
+        },
+        {
+          "type": "result",
+          "settings": {
+            "quote": "Insightful guidance that makes a difference in life truly.",
+            "author_name": "Michael R.",
+            "rating": "4.6/5.0"
+          }
+        },
+        {
+          "type": "result",
+          "settings": {
+            "quote": "My hair fall reduced noticeably and hair growth can be seen clearly.",
+            "author_name": "Sophia Chen",
+            "rating": "4.8/5.0"
+          }
+        },
+        {
+          "type": "result",
+          "settings": {
+            "quote": "A transformative experience with huge impact.",
+            "author_name": "James T.",
+            "rating": "4.7/5.0"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

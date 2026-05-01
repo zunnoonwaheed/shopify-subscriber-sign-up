@@ -1,0 +1,548 @@
+{% comment %}
+  The Story Section
+  Save as: sections/the-story-section.liquid
+{% endcomment %}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Figtree:wght@300;400;500;600;700&display=swap');
+
+  .rr-story {
+    --bg: {{ section.settings.section_bg_color }};
+    --title: {{ section.settings.title_color }};
+    --text: {{ section.settings.text_color }};
+    --muted: {{ section.settings.muted_color }};
+    --block-bg: {{ section.settings.block_bg_color }};
+    --number-color: {{ section.settings.number_color }};
+    --btn-bg: {{ section.settings.button_bg_color }};
+    --btn-text: {{ section.settings.button_text_color }};
+    --heading-font: '{{ section.settings.heading_font }}', Georgia, serif;
+    --body-font: '{{ section.settings.body_font }}', -apple-system, sans-serif;
+    --main-heading-weight: {{ section.settings.main_heading_weight }};
+    --block-heading-weight: {{ section.settings.block_heading_weight }};
+    --block-text-size: {{ section.settings.block_text_size }}px;
+    --block-text-weight: {{ section.settings.block_text_weight }};
+    --number-size: {{ section.settings.number_size }}px;
+    --image-radius: {{ section.settings.image_roundedness }}px;
+    --block-radius: {{ section.settings.block_roundedness }}px;
+    --button-radius: {{ section.settings.button_roundedness }}px;
+    --block-padding: {{ section.settings.block_padding }}px;
+
+    background: var(--bg);
+    padding: 100px 20px 0 !important; /* DESKTOP: top 100px, bottom 0 */
+    font-family: var(--body-font);
+  }
+
+  .rr-story__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  /* ── LEFT COLUMN ── */
+  .rr-story__left {
+    position: sticky;
+    top: 100px;
+  }
+
+  /* Image: 28px below image → heading */
+  .rr-story__image {
+    border-radius: var(--image-radius);
+    overflow: hidden;
+    margin-bottom: 28px !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+
+  .rr-story__img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .rr-story__placeholder {
+    aspect-ratio: 4 / 5;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,.05) 1px, transparent 1px) 0 0 / 42px 42px,
+      linear-gradient(0deg, rgba(0,0,0,.05) 1px, transparent 1px) 0 0 / 42px 42px,
+      #f2f2f2;
+  }
+
+  /* Main heading */
+  .rr-story__title {
+    font-family: var(--heading-font) !important;
+    font-size: 32px !important;
+    font-weight: var(--main-heading-weight) !important;
+    line-height: 1.2 !important;
+    color: var(--title) !important;
+    margin: 0 0 28px 0 !important; /* heading → text: 28px */
+    letter-spacing: -0.01em !important;
+  }
+
+  .rr-story__title em {
+    font-style: italic;
+    font-weight: var(--main-heading-weight);
+  }
+
+  /* Description text */
+  .rr-story__description {
+    font-family: var(--body-font) !important;
+    font-size: 18px !important;
+    line-height: 1.65 !important;
+    color: var(--muted) !important;
+    margin: 0 0 28px 0 !important; /* text → button: 28px */
+  }
+
+  .rr-story__description p { margin: 0 0 10px 0; }
+  .rr-story__description p:last-child { margin-bottom: 0; }
+
+  /* Button */
+  .rr-story__btn {
+    display: inline-block !important;
+    background: var(--btn-bg) !important;
+    color: var(--btn-text) !important;
+    padding: 14px 28px !important;
+    border-radius: var(--button-radius) !important;
+    text-decoration: none !important;
+    font-family: var(--body-font) !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    letter-spacing: 0.3px !important;
+  }
+
+  .rr-story__btn:hover {
+    transform: translateY(-1px);
+    opacity: 0.92;
+  }
+
+  /* ── RIGHT COLUMN — STORY BLOCKS ── */
+  .rr-story__right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .rr-story__block {
+    background: var(--block-bg) !important;
+    padding: var(--block-padding) !important;
+    border-radius: var(--block-radius) !important;
+    position: relative;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .rr-story__block:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  }
+
+  /* Number: 16px gap between number and text content */
+  .rr-story__number {
+    font-family: var(--heading-font) !important;
+    font-size: var(--number-size) !important;
+    font-weight: 300 !important;
+    color: var(--number-color) !important;
+    line-height: 1 !important;
+    margin: 0 0 16px 0 !important; /* 16px number → block text */
+    padding: 0 !important;
+    display: block !important;
+  }
+
+  /* Block heading */
+  .rr-story__block-title {
+    font-family: var(--heading-font) !important;
+    font-size: 20px !important;
+    font-weight: var(--block-heading-weight) !important;
+    line-height: 1.3 !important;
+    color: var(--title) !important;
+    margin: 0 0 6px 0 !important;
+    padding: 0 !important;
+    letter-spacing: -0.01em !important;
+  }
+
+  .rr-story__block-title em {
+    font-style: italic;
+    font-weight: var(--block-heading-weight);
+  }
+
+  /* Block body text */
+  .rr-story__block-text {
+    font-family: var(--body-font) !important;
+    font-size: var(--block-text-size) !important;
+    font-weight: var(--block-text-weight) !important;
+    line-height: 1.6 !important;
+    color: var(--muted) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .rr-story__block-text p { margin: 0 !important; }
+
+  /* Desktop: show full; hide mobile-only */
+  .rr-story__block-text--mobile { display: none; }
+
+  /* Dots hidden on desktop */
+  .rr-story__dots-wrap { display: none; }
+  .rr-story__dots { display: none; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 968px) {
+    .rr-story {
+      padding: 100px 20px 0 !important; /* mobile top 100px, bottom 0 */
+    }
+
+    .rr-story__container {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    .rr-story__left {
+      position: relative;
+      top: 0;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .rr-story__image {
+      width: 100%;
+      max-width: 100%;
+      margin-bottom: 20px !important; /* MOBILE: image → heading: 20px */
+    }
+
+    .rr-story__title {
+      font-size: clamp(24px, 7vw, 32px) !important;
+      margin-bottom: 20px !important; /* MOBILE: heading → text: 20px */
+    }
+
+    .rr-story__description {
+      font-size: 16px !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      max-width: 520px !important;
+      text-align: center !important;
+      margin-bottom: 20px !important; /* MOBILE: text → button: 20px */
+    }
+
+    .rr-story__btn {
+      margin: 0 auto 40px !important; /* MOBILE: button → cards: 40px */
+      display: block;
+    }
+
+    /* Cards: horizontal scroll */
+    .rr-story__right {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      gap: 16px;
+      padding: 0 0 8px 0;
+      scrollbar-width: none;
+    }
+
+    .rr-story__right::-webkit-scrollbar { display: none; }
+
+    .rr-story__block {
+      flex: 0 0 100% !important;
+      width: 100% !important;
+      min-width: 100% !important;
+      max-width: 100% !important;
+      scroll-snap-align: center;
+      scroll-snap-stop: always;
+      box-sizing: border-box;
+      text-align: center !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+    }
+
+    .rr-story__number { text-align: center !important; }
+    .rr-story__block-content-wrap { text-align: center !important; width: 100%; }
+    .rr-story__block-title { text-align: center !important; }
+    .rr-story__block-text { text-align: center !important; }
+
+    .rr-story__block-text--desktop { display: none; }
+    .rr-story__block-text--mobile { display: block; }
+
+    .rr-story__dots-wrap {
+      display: block;
+      grid-column: 1 / -1;
+      margin-top: 12px;
+    }
+
+    .rr-story__dots {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 0 0 0;
+      margin: 0;
+    }
+
+    .rr-story__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(148, 30, 49, 0.25);
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: background 0.25s ease, transform 0.25s ease, width 0.25s ease;
+      flex-shrink: 0;
+    }
+
+    .rr-story__dot--active {
+      background: #941E31;
+      width: 22px;
+      border-radius: 4px;
+    }
+
+    .rr-story__dot:focus-visible {
+      outline: 2px solid #941E31;
+      outline-offset: 2px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .rr-story__title { font-size: clamp(22px, 6vw, 28px) !important; }
+    .rr-story__description { font-size: 15px !important; }
+    .rr-story__number { font-size: calc(var(--number-size) * 0.85) !important; }
+    .rr-story__block-title { font-size: 18px !important; }
+    .rr-story__block { padding: calc(var(--block-padding) * 0.9) !important; }
+  }
+</style>
+
+<script>
+(function() {
+  function initStoryDots(sectionId) {
+    var slider = document.getElementById('rr-story-right-' + sectionId);
+    var dotsContainer = document.getElementById('rr-story-dots-' + sectionId);
+    if (!slider || !dotsContainer) return;
+
+    var dots = dotsContainer.querySelectorAll('.rr-story__dot');
+    if (!dots.length) return;
+
+    dots.forEach(function(dot) {
+      dot.addEventListener('click', function() {
+        var index = parseInt(dot.getAttribute('data-index'), 10);
+        var blocks = slider.querySelectorAll('.rr-story__block');
+        if (blocks[index]) {
+          blocks[index].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      });
+    });
+
+    var ticking = false;
+    slider.addEventListener('scroll', function() {
+      if (!ticking) {
+        requestAnimationFrame(function() {
+          var scrollLeft = slider.scrollLeft;
+          var width = slider.offsetWidth;
+          var activeIndex = Math.round(scrollLeft / width);
+          dots.forEach(function(d, i) {
+            d.classList.toggle('rr-story__dot--active', i === activeIndex);
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    initStoryDots('{{ section.id }}');
+  });
+
+  document.addEventListener('shopify:section:load', function(e) {
+    if (e.detail && e.detail.sectionId === '{{ section.id }}') {
+      initStoryDots('{{ section.id }}');
+    }
+  });
+})();
+</script>
+
+<section class="rr-story">
+  <div class="rr-story__container">
+
+    <!-- Left Column: Image & Main Story -->
+    <div class="rr-story__left">
+      <div class="rr-story__image">
+        {% if section.settings.main_image != blank %}
+          {{ section.settings.main_image | image_url: width: 1200 | image_tag:
+            loading: 'lazy',
+            class: 'rr-story__img',
+            alt: section.settings.main_image.alt | escape
+          }}
+        {% else %}
+          <div class="rr-story__placeholder"></div>
+        {% endif %}
+      </div>
+
+      <h2 class="rr-story__title">
+        {{ section.settings.title_before | escape }}{% if section.settings.title_emphasis != blank %} <em>{{ section.settings.title_emphasis | escape }}</em>{% endif %}{% if section.settings.title_after != blank %} {{ section.settings.title_after | escape }}{% endif %}
+      </h2>
+
+      {% if section.settings.description != blank %}
+        <div class="rr-story__description">
+          {{ section.settings.description }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.button_text != blank %}
+        <a href="{{ section.settings.button_link | default: '#' }}" class="rr-story__btn">
+          {{ section.settings.button_text | escape }}
+        </a>
+      {% endif %}
+    </div>
+
+    <!-- Right Column: Numbered Story Blocks -->
+    <div class="rr-story__right" id="rr-story-right-{{ section.id }}">
+      {% for block in section.blocks %}
+        <div class="rr-story__block" {{ block.shopify_attributes }}>
+          {% if section.settings.show_numbers %}
+            <div class="rr-story__number">{{ forloop.index }}</div>
+          {% endif %}
+
+          <div class="rr-story__block-content-wrap">
+            <h3 class="rr-story__block-title">
+              {{ block.settings.title_before | escape }}{% if block.settings.title_emphasis != blank %} <em>{{ block.settings.title_emphasis | escape }}</em>{% endif %}{% if block.settings.title_after != blank %} {{ block.settings.title_after | escape }}{% endif %}
+            </h3>
+
+            {% if block.settings.content != blank %}
+              <div class="rr-story__block-text rr-story__block-text--desktop">
+                {{ block.settings.content }}
+              </div>
+            {% endif %}
+            {% if block.settings.content != blank or block.settings.content_mobile != blank %}
+              <div class="rr-story__block-text rr-story__block-text--mobile">
+                {% if block.settings.content_mobile != blank %}
+                  {{ block.settings.content_mobile }}
+                {% else %}
+                  {{ block.settings.content }}
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Mobile Navigation Dots -->
+    {% if section.blocks.size > 1 %}
+      <div class="rr-story__dots-wrap">
+        <div class="rr-story__dots" id="rr-story-dots-{{ section.id }}" aria-hidden="true">
+          {% for block in section.blocks %}
+            <button
+              class="rr-story__dot{% if forloop.first %} rr-story__dot--active{% endif %}"
+              data-index="{{ forloop.index0 }}"
+              aria-label="Go to slide {{ forloop.index }}"
+            ></button>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "The Story Section",
+  "settings": [
+    { "type": "header", "content": "Main Story Content" },
+    { "type": "image_picker", "id": "main_image", "label": "Story Image" },
+    { "type": "text", "id": "title_before", "label": "Title (before italic)", "default": "The " },
+    { "type": "text", "id": "title_emphasis", "label": "Title (italic word)", "default": "Story" },
+    { "type": "text", "id": "title_after", "label": "Title (after italic)" },
+    { "type": "richtext", "id": "description", "label": "Description", "default": "<p>Root Reboot began as a ritual — not a product. A tradition built on patience, care, and the quiet belief that the most meaningful results come with time.</p>" },
+    { "type": "text", "id": "button_text", "label": "Button Text", "default": "Shop Root Reboot" },
+    { "type": "url", "id": "button_link", "label": "Button Link" },
+    { "type": "header", "content": "Story Blocks" },
+    { "type": "checkbox", "id": "show_numbers", "label": "Show block numbers", "default": true },
+    { "type": "header", "content": "Spacing" },
+    { "type": "range", "id": "block_padding", "label": "Block padding", "min": 16, "max": 50, "step": 2, "unit": "px", "default": 24 },
+    { "type": "header", "content": "Roundedness" },
+    { "type": "range", "id": "image_roundedness", "label": "Image roundedness", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 16 },
+    { "type": "range", "id": "block_roundedness", "label": "Block roundedness", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 12 },
+    { "type": "range", "id": "button_roundedness", "label": "Button roundedness", "min": 0, "max": 50, "step": 1, "unit": "px", "default": 8 },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_bg_color", "label": "Section background", "default": "#FFFFFF" },
+    { "type": "color", "id": "block_bg_color", "label": "Story block background", "default": "#FAF8F4" },
+    { "type": "color", "id": "title_color", "label": "Heading color", "default": "#1E293B" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#1E293B" },
+    { "type": "color", "id": "muted_color", "label": "Muted text color", "default": "#5A5A5A" },
+    { "type": "color", "id": "number_color", "label": "Number color", "default": "#D4776F" },
+    { "type": "color", "id": "button_bg_color", "label": "Button background", "default": "#912643" },
+    { "type": "color", "id": "button_text_color", "label": "Button text color", "default": "#FFFFFF" },
+    { "type": "header", "content": "Typography" },
+    { "type": "select", "id": "heading_font", "label": "Heading font", "options": [
+      { "value": "Playfair Display", "label": "Playfair Display (Serif)" },
+      { "value": "Georgia", "label": "Georgia (Serif)" },
+      { "value": "Figtree", "label": "Figtree (Sans-serif)" },
+      { "value": "Arial", "label": "Arial (Sans-serif)" }
+    ], "default": "Playfair Display" },
+    { "type": "range", "id": "main_heading_size", "label": "Main heading size", "min": 24, "max": 56, "step": 2, "unit": "px", "default": 32 },
+    { "type": "select", "id": "main_heading_weight", "label": "Main heading weight", "options": [
+      { "value": "300", "label": "Light (300)" },
+      { "value": "400", "label": "Regular (400)" },
+      { "value": "500", "label": "Medium (500)" },
+      { "value": "600", "label": "Semi-Bold (600)" },
+      { "value": "700", "label": "Bold (700)" }
+    ], "default": "400" },
+    { "type": "range", "id": "block_heading_size", "label": "Block heading size", "min": 14, "max": 28, "step": 1, "unit": "px", "default": 20 },
+    { "type": "select", "id": "block_heading_weight", "label": "Block heading weight", "options": [
+      { "value": "300", "label": "Light (300)" },
+      { "value": "400", "label": "Regular (400)" },
+      { "value": "500", "label": "Medium (500)" },
+      { "value": "600", "label": "Semi-Bold (600)" },
+      { "value": "700", "label": "Bold (700)" }
+    ], "default": "400" },
+    { "type": "range", "id": "block_text_size", "label": "Block text size", "min": 12, "max": 20, "step": 0.5, "unit": "px", "default": 14 },
+    { "type": "select", "id": "block_text_weight", "label": "Block text weight", "options": [
+      { "value": "300", "label": "Light (300)" },
+      { "value": "400", "label": "Regular (400)" },
+      { "value": "500", "label": "Medium (500)" },
+      { "value": "600", "label": "Semi-Bold (600)" }
+    ], "default": "400" },
+    { "type": "range", "id": "number_size", "label": "Number size", "min": 32, "max": 72, "step": 2, "unit": "px", "default": 46 },
+    { "type": "select", "id": "body_font", "label": "Body text font", "options": [
+      { "value": "Figtree", "label": "Figtree (Sans-serif)" },
+      { "value": "Arial", "label": "Arial (Sans-serif)" },
+      { "value": "Helvetica", "label": "Helvetica (Sans-serif)" },
+      { "value": "Georgia", "label": "Georgia (Serif)" }
+    ], "default": "Figtree" }
+  ],
+  "blocks": [
+    {
+      "type": "story_block",
+      "name": "Story Block",
+      "settings": [
+        { "type": "text", "id": "title_before", "label": "Title (before italic)", "default": "It Started with Our " },
+        { "type": "text", "id": "title_emphasis", "label": "Title (italic word)", "default": "Nani" },
+        { "type": "text", "id": "title_after", "label": "Title (after italic)" },
+        { "type": "richtext", "id": "content", "label": "Content (desktop)", "default": "<p>Root Reboot was inspired by our founder's nani — the one who treated hair oiling like a moment of care, not a chore. Her routine was simple, intentional, and consistent, rooted in ingredients she trusted and a process she never rushed.</p>" },
+        { "type": "richtext", "id": "content_mobile", "label": "Content (mobile – optional shorter text)", "info": "If set, this shows on mobile instead of the desktop content. Leave blank to use the same text." }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "The Story Section",
+      "blocks": [
+        { "type": "story_block", "settings": { "title_before": "It Started with Our ", "title_emphasis": "Nani", "content": "<p>Root Reboot was inspired by our founder's nani — the one who treated hair oiling like a moment of care, not a chore.</p>", "content_mobile": "<p>Root Reboot was inspired by our founder's nani, who valued hair oiling.</p>" } },
+        { "type": "story_block", "settings": { "title_before": "A Ritual Woven into ", "title_emphasis": "Heritage", "content": "<p>Across generations, hair oiling has been more than beauty — it's been a form of nourishment, tradition, and connection.</p>", "content_mobile": "<p>Hair oiling has been nourishment, tradition, and connection across generations.</p>" } },
+        { "type": "story_block", "settings": { "title_before": "Reimagined for ", "title_emphasis": "Today", "content": "<p>Root Reboot brings that same intention into the present, thoughtfully crafted to match modern standards while staying true to its roots.</p>", "content_mobile": "<p>Root Reboot brings that intention into the present — crafted for the everyday routine.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

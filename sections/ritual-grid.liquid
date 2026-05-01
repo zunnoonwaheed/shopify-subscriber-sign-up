@@ -1,0 +1,419 @@
+<style>
+  #rr-ritual-grid-{{ section.id }} {
+    background-color: {{ section.settings.bg_color }};
+    padding-top: 100px !important;
+    padding-bottom: 0 !important;
+    overflow: hidden;
+  }
+
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__inner {
+    max-width: {{ section.settings.max_width }}px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: {{ section.settings.padding_left }}px;
+    padding-right: {{ section.settings.padding_right }}px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__heading {
+    font-family: '{{ section.settings.heading_font }}', serif;
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: {{ section.settings.heading_weight }};
+    color: {{ section.settings.title_color }};
+    margin: 0 0 12px;
+  }
+
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__heading em {
+    font-style: italic;
+  }
+
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__subheading {
+    font-family: '{{ section.settings.body_font }}', sans-serif;
+    color: {{ section.settings.muted_color }};
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  /* ── DESKTOP: 2-column grid ── */
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: {{ section.settings.grid_gap }}px;
+    align-items: stretch;
+  }
+
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__left-col {
+    display: flex;
+    flex-direction: column;
+    gap: {{ section.settings.grid_gap }}px;
+  }
+
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__right-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── CARD ── */
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__card {
+    background: {{ section.settings.card_bg }};
+    border-radius: {{ section.settings.card_radius }}px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__card--hero {
+    height: 100%;
+  }
+
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__img-wrap {
+    width: 100%;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__img-wrap--small {
+    height: {{ section.settings.small_card_image_height }}px;
+  }
+
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__img-wrap--hero {
+    flex: 1;
+    min-height: {{ section.settings.hero_card_image_min_height }}px;
+  }
+
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__placeholder {
+    width: 100%;
+    height: 100%;
+    background: #E8E4DE;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 14px;
+  }
+
+  /* DESKTOP card body: 28px from text → button */
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__card-body {
+    padding: {{ section.settings.card_content_padding }}px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;  /* prevent children (button) from stretching full width */
+  }
+
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__card-title {
+    font-family: '{{ section.settings.heading_font }}', serif;
+    font-size: {{ section.settings.card_heading_size }}px;
+    font-weight: {{ section.settings.card_heading_weight }};
+    color: {{ section.settings.title_color }};
+    margin: 0 0 10px !important;
+  }
+
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__card-title em {
+    font-style: italic;
+  }
+
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__card-text {
+    font-family: '{{ section.settings.body_font }}', sans-serif;
+    font-size: {{ section.settings.card_text_size }}px;
+    line-height: 1.6;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 28px !important;  /* DESKTOP: 28px text → button */
+  }
+
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__btn {
+    display: inline-block !important;
+    width: auto !important;
+    max-width: fit-content !important;
+    align-self: flex-start !important;
+    padding: 10px 20px !important;
+    background: {{ section.settings.button_bg }} !important;
+    color: {{ section.settings.button_text }} !important;
+    font-family: '{{ section.settings.body_font }}', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    border-radius: {{ section.settings.button_radius }}px !important;
+    text-decoration: none !important;
+    transition: opacity 0.2s ease !important;
+  }
+
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__btn:hover {
+    opacity: 0.85;
+  }
+
+  /* DESKTOP: 48px from section header bottom → first card top */
+  #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__header {
+    text-align: center;
+    margin-bottom: 48px !important;  /* DESKTOP: 48px header → cards */
+  }
+
+  /* ── MOBILE carousel ── */
+  @media (max-width: 768px) {
+
+    #rr-ritual-grid-{{ section.id }} {
+      padding-top: 100px !important;
+      padding-bottom: 0 !important;
+    }
+
+    #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__inner {
+      padding-left: {{ section.settings.padding_left_mobile }}px;
+      padding-right: {{ section.settings.padding_right_mobile }}px;
+      max-width: 100%;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__header {
+      padding-left: 0;
+      padding-right: 0;
+      margin-bottom: 40px !important;  /* MOBILE: 40px header → cards */
+    }
+
+    #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__grid {
+      display: flex !important;
+      flex-direction: row !important;
+      grid-template-columns: unset !important;
+      gap: {{ section.settings.mobile_card_gap }}px;
+      overflow-x: auto;
+      overflow-y: visible;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      width: 100%;
+      box-sizing: border-box;
+      align-items: stretch;
+    }
+
+    #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__grid::-webkit-scrollbar {
+      display: none;
+    }
+
+    #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__left-col,
+    #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__right-col {
+      display: contents !important;
+    }
+
+    #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__card {
+      flex: 0 0 {{ section.settings.mobile_card_width }}%;
+      width: {{ section.settings.mobile_card_width }}%;
+      max-width: {{ section.settings.mobile_card_width }}%;
+      min-width: 0;
+      scroll-snap-align: start;
+      height: auto;
+      min-height: unset;
+      box-sizing: border-box;
+    }
+
+    #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__img-wrap--small,
+    #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__img-wrap--hero {
+      height: {{ section.settings.mobile_card_image_height }}px !important;
+      min-height: unset !important;
+      flex: unset !important;
+    }
+
+    /* MOBILE: 16px text → button inside cards */
+    #rr-ritual-grid-{{ section.id }} .rr-ritual-grid__card-text {
+      margin: 0 0 16px !important;  /* MOBILE: 16px text → button */
+    }
+  }
+</style>
+
+<section id="rr-ritual-grid-{{ section.id }}">
+  <div class="rr-ritual-grid__inner">
+
+    {% if section.settings.heading_before != blank %}
+    <div class="rr-ritual-grid__header">
+      <h2 class="rr-ritual-grid__heading">
+        {{ section.settings.heading_before | escape }} <em>{{ section.settings.heading_emphasis | escape }}</em>
+      </h2>
+      {% if section.settings.subheading != blank %}
+      <div class="rr-ritual-grid__subheading">{{ section.settings.subheading }}</div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="rr-ritual-grid__grid">
+
+      <div class="rr-ritual-grid__left-col">
+        {% assign left_blocks = section.blocks | where: "type", "left_card" %}
+        {% for block in left_blocks %}
+        <div class="rr-ritual-grid__card" {{ block.shopify_attributes }}>
+          <div class="rr-ritual-grid__img-wrap rr-ritual-grid__img-wrap--small">
+            {% if block.settings.image != blank %}
+              {{ block.settings.image | image_url: width: 1200 | image_tag: loading: 'lazy', class: 'rr-ritual-grid__img', alt: block.settings.image.alt | escape }}
+            {% else %}
+              <div class="rr-ritual-grid__placeholder">No image</div>
+            {% endif %}
+          </div>
+          <div class="rr-ritual-grid__card-body">
+            {% if block.settings.title_before != blank %}
+            <h3 class="rr-ritual-grid__card-title">
+              {{ block.settings.title_before | escape }} <em>{{ block.settings.title_emphasis | escape }}</em>
+            </h3>
+            {% endif %}
+            {% if block.settings.text != blank %}
+            <p class="rr-ritual-grid__card-text">{{ block.settings.text }}</p>
+            {% endif %}
+            {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+            <a href="{{ block.settings.button_link }}" class="rr-ritual-grid__btn">{{ block.settings.button_label | escape }}</a>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="rr-ritual-grid__right-col">
+        {% assign right_blocks = section.blocks | where: "type", "right_card" %}
+        {% for block in right_blocks limit: 1 %}
+        <div class="rr-ritual-grid__card rr-ritual-grid__card--hero" {{ block.shopify_attributes }}>
+          <div class="rr-ritual-grid__img-wrap rr-ritual-grid__img-wrap--hero">
+            {% if block.settings.image != blank %}
+              {{ block.settings.image | image_url: width: 2000 | image_tag: loading: 'lazy', class: 'rr-ritual-grid__img rr-ritual-grid__img--hero', alt: block.settings.image.alt | escape }}
+            {% else %}
+              <div class="rr-ritual-grid__placeholder">No image</div>
+            {% endif %}
+          </div>
+          <div class="rr-ritual-grid__card-body">
+            {% if block.settings.title_before != blank %}
+            <h3 class="rr-ritual-grid__card-title">
+              {{ block.settings.title_before | escape }} <em>{{ block.settings.title_emphasis | escape }}</em>
+            </h3>
+            {% endif %}
+            {% if block.settings.text != blank %}
+            <p class="rr-ritual-grid__card-text">{{ block.settings.text }}</p>
+            {% endif %}
+            {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+            <a href="{{ block.settings.button_link }}" class="rr-ritual-grid__btn">{{ block.settings.button_label | escape }}</a>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Ritual Grid",
+  "settings": [
+    { "type": "header", "content": "Section Header" },
+    { "type": "text", "id": "heading_before", "label": "Heading (before italic)", "default": "Where the Ritual Becomes" },
+    { "type": "text", "id": "heading_emphasis", "label": "Heading (italic word)", "default": "Root Reboot" },
+    { "type": "richtext", "id": "subheading", "label": "Subheading", "default": "<p>Root Reboot, crafted for daily use, consistent care, and visible results over time.</p>" },
+    { "type": "header", "content": "Vertical Spacing" },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 120, "step": 5, "unit": "px", "default": 100 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 120, "step": 5, "unit": "px", "default": 0 },
+    { "type": "header", "content": "Width & Padding — Desktop" },
+    { "type": "range", "id": "max_width", "label": "Max content width", "min": 800, "max": 1600, "step": 50, "unit": "px", "default": 1200 },
+    { "type": "range", "id": "padding_left", "label": "Left padding", "min": 0, "max": 200, "step": 5, "unit": "px", "default": 40 },
+    { "type": "range", "id": "padding_right", "label": "Right padding", "min": 0, "max": 200, "step": 5, "unit": "px", "default": 40 },
+    { "type": "header", "content": "Padding — Mobile" },
+    { "type": "range", "id": "padding_left_mobile", "label": "Left padding (mobile)", "min": 0, "max": 60, "step": 2, "unit": "px", "default": 20 },
+    { "type": "range", "id": "padding_right_mobile", "label": "Right padding (mobile)", "min": 0, "max": 60, "step": 2, "unit": "px", "default": 20 },
+    { "type": "header", "content": "Mobile Carousel" },
+    { "type": "range", "id": "mobile_card_width", "label": "Card width % (one card visible)", "min": 75, "max": 95, "step": 1, "default": 88 },
+    { "type": "range", "id": "mobile_card_gap", "label": "Gap between cards (mobile)", "min": 12, "max": 40, "step": 2, "unit": "px", "default": 20 },
+    { "type": "range", "id": "mobile_card_image_height", "label": "Card image height (mobile)", "min": 140, "max": 380, "step": 10, "unit": "px", "default": 200 },
+    { "type": "header", "content": "Grid" },
+    { "type": "range", "id": "grid_gap", "label": "Gap between cards (desktop)", "min": 8, "max": 48, "step": 2, "unit": "px", "default": 20 },
+    { "type": "header", "content": "Cards" },
+    { "type": "range", "id": "card_radius", "label": "Card border radius", "min": 0, "max": 32, "step": 2, "unit": "px", "default": 12 },
+    { "type": "range", "id": "card_content_padding", "label": "Card content padding", "min": 12, "max": 48, "step": 2, "unit": "px", "default": 20 },
+    { "type": "range", "id": "small_card_image_height", "label": "Small card image height (desktop)", "min": 140, "max": 400, "step": 10, "unit": "px", "default": 220 },
+    { "type": "range", "id": "hero_card_image_min_height", "label": "Hero card min image height (desktop)", "min": 200, "max": 600, "step": 10, "unit": "px", "default": 300 },
+    { "type": "range", "id": "card_text_size", "label": "Card body text size", "min": 12, "max": 18, "step": 1, "unit": "px", "default": 14 },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg_color", "label": "Section background", "default": "#FAF9F7" },
+    { "type": "color", "id": "title_color", "label": "Heading color", "default": "#1E293B" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#1F2A44" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#5A667A" },
+    { "type": "color", "id": "card_bg", "label": "Card background", "default": "#FFFFFF" },
+    { "type": "header", "content": "Button" },
+    { "type": "color", "id": "button_bg", "label": "Button background", "default": "#FCE8EA" },
+    { "type": "color", "id": "button_text", "label": "Button text", "default": "#C43B57" },
+    { "type": "range", "id": "button_radius", "label": "Button roundedness", "min": 0, "max": 50, "step": 2, "unit": "px", "default": 40 },
+    { "type": "header", "content": "Typography" },
+    { "type": "select", "id": "heading_font", "label": "Heading font", "options": [
+      { "value": "Playfair Display", "label": "Playfair Display (Serif)" },
+      { "value": "Georgia", "label": "Georgia (Serif)" },
+      { "value": "Figtree", "label": "Figtree (Sans-serif)" }
+    ], "default": "Playfair Display" },
+    { "type": "select", "id": "heading_weight", "label": "Main heading weight", "options": [
+      { "value": "300", "label": "Light (300)" },
+      { "value": "400", "label": "Regular (400)" },
+      { "value": "500", "label": "Medium (500)" },
+      { "value": "600", "label": "Semi-Bold (600)" },
+      { "value": "700", "label": "Bold (700)" }
+    ], "default": "400" },
+    { "type": "range", "id": "heading_size", "label": "Main heading size", "min": 24, "max": 56, "step": 2, "unit": "px", "default": 32 },
+    { "type": "select", "id": "card_heading_weight", "label": "Card heading weight", "options": [
+      { "value": "300", "label": "Light (300)" },
+      { "value": "400", "label": "Regular (400)" },
+      { "value": "500", "label": "Medium (500)" },
+      { "value": "600", "label": "Semi-Bold (600)" },
+      { "value": "700", "label": "Bold (700)" }
+    ], "default": "400" },
+    { "type": "range", "id": "card_heading_size", "label": "Card heading size", "min": 16, "max": 28, "step": 1, "unit": "px", "default": 20 },
+    { "type": "select", "id": "body_font", "label": "Body text font", "options": [
+      { "value": "Figtree", "label": "Figtree (Sans-serif)" },
+      { "value": "Arial", "label": "Arial (Sans-serif)" },
+      { "value": "Helvetica", "label": "Helvetica (Sans-serif)" }
+    ], "default": "Figtree" }
+  ],
+  "blocks": [
+    {
+      "type": "left_card",
+      "name": "Left Card (Small)",
+      "limit": 2,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "title_before", "label": "Title (before italic)", "default": "Crafted with" },
+        { "type": "text", "id": "title_emphasis", "label": "Title (italic word)", "default": "Intention" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Root Reboot uses traditional ingredients to nourish hair without harsh processing." },
+        { "type": "text", "id": "button_label", "label": "Button Label", "default": "Explore the Formula" },
+        { "type": "url", "id": "button_link", "label": "Button Link" }
+      ]
+    },
+    {
+      "type": "right_card",
+      "name": "Right Card (Hero)",
+      "limit": 1,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "title_before", "label": "Title (before italic)", "default": "Rooted" },
+        { "type": "text", "id": "title_emphasis", "label": "Title (italic word)", "default": "Results Over Time" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Consistent care leads to stronger roots, a healthier scalp, and hair that feels balanced and resilient." },
+        { "type": "text", "id": "button_label", "label": "Button Label", "default": "Shop Root Reboot" },
+        { "type": "url", "id": "button_link", "label": "Button Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ritual Grid",
+      "blocks": [
+        { "type": "left_card" },
+        { "type": "left_card" },
+        { "type": "right_card" }
+      ]
+    }
+  ]
+}
+{% endschema %}

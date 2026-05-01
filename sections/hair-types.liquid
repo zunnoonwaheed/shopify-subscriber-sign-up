@@ -1,0 +1,86 @@
+{% comment %}
+  Section: Marquee Text Section
+  Save as: sections/marquee.liquid
+{% endcomment %}
+
+<section class="marquee-section" style="background-color: {{ section.settings.bg_color }};">
+  <div class="marquee-wrapper">
+    {% if section.settings.show_marquee %}
+      <div class="marquee-content">
+        <span>{{ section.settings.marquee_text }}</span>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  .marquee-section {
+    padding: 20px 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+
+  .marquee-wrapper {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .marquee-content {
+    position: absolute;
+    white-space: nowrap;
+    animation: marquee 10s linear infinite;
+  }
+
+  .marquee-content span {
+    font-size: 18px;
+    font-weight: bold;
+    padding-left: 100%;
+    color: #333;
+  }
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Marquee Section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_marquee",
+      "label": "Show Marquee",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "marquee_text",
+      "label": "Marquee Text",
+      "default": "Free Shipping on All Orders — Limited Time"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F0F0F0"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Default Marquee Section"
+    }
+  ]
+}
+{% endschema %}

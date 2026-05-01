@@ -1,0 +1,601 @@
+{% comment %}
+  Root Reboot Journal Section
+  A collection of stories, tips, and rituals for hair wellness
+{% endcomment %}
+
+<section class="root-reboot-journal">
+  <div class="journal-container">
+    
+    {%- comment -%} Header Section {%- endcomment -%}
+    <div class="journal-header">
+      <h1 class="journal-title">The Root Reboot Journal</h1>
+      <p class="journal-subtitle">
+        A collection of stories, tips, and rituals — grounded in heritage and crafted for modern hair wellness, with consistency at the core.
+      </p>
+    </div>
+
+    {%- comment -%} Navigation Tabs {%- endcomment -%}
+    <nav class="journal-nav">
+      <ul class="journal-nav-list">
+        <li class="journal-nav-item">
+          <a href="#routine" class="journal-nav-link {% if section.settings.active_tab == 'routine' %}active{% endif %}">
+            Routine
+          </a>
+        </li>
+        <li class="journal-nav-item">
+          <a href="#hair-wellness" class="journal-nav-link {% if section.settings.active_tab == 'hair-wellness' %}active{% endif %}">
+            Hair Wellness
+          </a>
+        </li>
+        <li class="journal-nav-item">
+          <a href="#ingredients" class="journal-nav-link {% if section.settings.active_tab == 'ingredients' %}active{% endif %}">
+            Ingredients
+          </a>
+        </li>
+        <li class="journal-nav-item">
+          <a href="#scalp-care" class="journal-nav-link {% if section.settings.active_tab == 'scalp-care' %}active{% endif %}">
+            Scalp Care
+          </a>
+        </li>
+        <li class="journal-nav-item">
+          <a href="#community" class="journal-nav-link {% if section.settings.active_tab == 'community' %}active{% endif %}">
+            Community
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    {%- comment -%} Articles Grid {%- endcomment -%}
+    <div class="journal-grid">
+      
+      {%- comment -%} Article 1 {%- endcomment -%}
+      {% if section.settings.article_1_show %}
+      <article class="journal-card">
+        {% if section.settings.article_1_image %}
+          <div class="journal-card-image-wrapper">
+            <div class="journal-card-image">
+              <img 
+                src="{{ section.settings.article_1_image | img_url: '600x' }}" 
+                alt="{{ section.settings.article_1_title }}"
+                loading="lazy"
+              >
+            </div>
+          </div>
+        {% endif %}
+        <div class="journal-card-content">
+          <h3 class="journal-card-title">{{ section.settings.article_1_title }}</h3>
+          <p class="journal-card-description">{{ section.settings.article_1_description }}</p>
+          <a href="{{ section.settings.article_1_url }}" class="journal-card-link">
+            Read More
+          </a>
+        </div>
+      </article>
+      {% endif %}
+
+      {%- comment -%} Article 2 {%- endcomment -%}
+      {% if section.settings.article_2_show %}
+      <article class="journal-card">
+        {% if section.settings.article_2_image %}
+          <div class="journal-card-image-wrapper">
+            <div class="journal-card-image">
+              <img 
+                src="{{ section.settings.article_2_image | img_url: '600x' }}" 
+                alt="{{ section.settings.article_2_title }}"
+                loading="lazy"
+              >
+            </div>
+          </div>
+        {% endif %}
+        <div class="journal-card-content">
+          <h3 class="journal-card-title">{{ section.settings.article_2_title }}</h3>
+          <p class="journal-card-description">{{ section.settings.article_2_description }}</p>
+          <a href="{{ section.settings.article_2_url }}" class="journal-card-link">
+            Read More
+          </a>
+        </div>
+      </article>
+      {% endif %}
+
+      {%- comment -%} Article 3 {%- endcomment -%}
+      {% if section.settings.article_3_show %}
+      <article class="journal-card">
+        {% if section.settings.article_3_image %}
+          <div class="journal-card-image-wrapper">
+            <div class="journal-card-image">
+              <img 
+                src="{{ section.settings.article_3_image | img_url: '600x' }}" 
+                alt="{{ section.settings.article_3_title }}"
+                loading="lazy"
+              >
+            </div>
+          </div>
+        {% endif %}
+        <div class="journal-card-content">
+          <h3 class="journal-card-title">{{ section.settings.article_3_title }}</h3>
+          <p class="journal-card-description">{{ section.settings.article_3_description }}</p>
+          <a href="{{ section.settings.article_3_url }}" class="journal-card-link">
+            Read More
+          </a>
+        </div>
+      </article>
+      {% endif %}
+
+      {%- comment -%} Article 4 {%- endcomment -%}
+      {% if section.settings.article_4_show %}
+      <article class="journal-card">
+        {% if section.settings.article_4_image %}
+          <div class="journal-card-image-wrapper">
+            <div class="journal-card-image">
+              <img 
+                src="{{ section.settings.article_4_image | img_url: '600x' }}" 
+                alt="{{ section.settings.article_4_title }}"
+                loading="lazy"
+              >
+            </div>
+          </div>
+        {% endif %}
+        <div class="journal-card-content">
+          <h3 class="journal-card-title">{{ section.settings.article_4_title }}</h3>
+          <p class="journal-card-description">{{ section.settings.article_4_description }}</p>
+          <a href="{{ section.settings.article_4_url }}" class="journal-card-link">
+            Read More
+          </a>
+        </div>
+      </article>
+      {% endif %}
+
+      {%- comment -%} Article 5 {%- endcomment -%}
+      {% if section.settings.article_5_show %}
+      <article class="journal-card">
+        {% if section.settings.article_5_image %}
+          <div class="journal-card-image-wrapper">
+            <div class="journal-card-image">
+              <img 
+                src="{{ section.settings.article_5_image | img_url: '600x' }}" 
+                alt="{{ section.settings.article_5_title }}"
+                loading="lazy"
+              >
+            </div>
+          </div>
+        {% endif %}
+        <div class="journal-card-content">
+          <h3 class="journal-card-title">{{ section.settings.article_5_title }}</h3>
+          <p class="journal-card-description">{{ section.settings.article_5_description }}</p>
+          <a href="{{ section.settings.article_5_url }}" class="journal-card-link">
+            Read More
+          </a>
+        </div>
+      </article>
+      {% endif %}
+
+      {%- comment -%} Article 6 {%- endcomment -%}
+      {% if section.settings.article_6_show %}
+      <article class="journal-card">
+        {% if section.settings.article_6_image %}
+          <div class="journal-card-image-wrapper">
+            <div class="journal-card-image">
+              <img 
+                src="{{ section.settings.article_6_image | img_url: '600x' }}" 
+                alt="{{ section.settings.article_6_title }}"
+                loading="lazy"
+              >
+            </div>
+          </div>
+        {% endif %}
+        <div class="journal-card-content">
+          <h3 class="journal-card-title">{{ section.settings.article_6_title }}</h3>
+          <p class="journal-card-description">{{ section.settings.article_6_description }}</p>
+          <a href="{{ section.settings.article_6_url }}" class="journal-card-link">
+            Read More
+          </a>
+        </div>
+      </article>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .root-reboot-journal {
+    background-color: #f9f7f4;
+    padding: 60px 20px;
+  }
+
+  .journal-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .journal-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .journal-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.5rem;
+    font-weight: 400;
+    color: #2c2c2c;
+    margin-bottom: 16px;
+  }
+
+  .journal-subtitle {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #666;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .journal-nav {
+    margin-bottom: 30px;
+  }
+
+  .journal-nav-list {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .journal-nav-item {
+    margin: 0;
+  }
+
+  .journal-nav-link {
+    display: block;
+    padding: 12px 24px;
+    background-color: #f5f1e8;
+    color: #2c2c2c;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+  }
+
+  .journal-nav-link:hover,
+  .journal-nav-link.active {
+    background-color: #e8e0d0;
+  }
+
+  .journal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 40px;
+  }
+
+  @media (max-width: 1024px) {
+    .journal-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .journal-card {
+    background-color: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .journal-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  .journal-card-image-wrapper {
+    width: 100%;
+    padding: 16px 16px 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .journal-card-image {
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .journal-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .journal-card-content {
+    padding: 18px 20px 24px 20px;
+  }
+
+  .journal-card-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #2c2c2c;
+    margin-bottom: 8px;
+    line-height: 1.35;
+  }
+
+  .journal-card-description {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #5a5a5a;
+    margin-bottom: 16px;
+  }
+
+  .journal-card-link {
+    display: inline-block;
+    padding: 10px 24px;
+    background-color: #fce9e9;
+    color: #c44569;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+
+  .journal-card-link:hover {
+    background-color: #fad9d9;
+  }
+
+  @media (max-width: 768px) {
+    .journal-title {
+      font-size: 2rem;
+    }
+
+    .journal-subtitle {
+      font-size: 0.9rem;
+    }
+
+    .journal-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .journal-nav-list {
+      gap: 8px;
+    }
+
+    .journal-nav-link {
+      padding: 10px 16px;
+      font-size: 0.85rem;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Root Reboot Journal",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "select",
+      "id": "active_tab",
+      "label": "Active Tab",
+      "options": [
+        { "value": "routine", "label": "Routine" },
+        { "value": "hair-wellness", "label": "Hair Wellness" },
+        { "value": "ingredients", "label": "Ingredients" },
+        { "value": "scalp-care", "label": "Scalp Care" },
+        { "value": "community", "label": "Community" }
+      ],
+      "default": "routine"
+    },
+    {
+      "type": "header",
+      "content": "Article 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "article_1_show",
+      "label": "Show Article 1",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "article_1_image",
+      "label": "Article 1 Image"
+    },
+    {
+      "type": "text",
+      "id": "article_1_title",
+      "label": "Article 1 Title",
+      "default": "The Root Reboot Routine: A Simple Weekly Ritual"
+    },
+    {
+      "type": "textarea",
+      "id": "article_1_description",
+      "label": "Article 1 Description",
+      "default": "Use this ritual 2–3 times a week for healthier roots and stronger hair."
+    },
+    {
+      "type": "url",
+      "id": "article_1_url",
+      "label": "Article 1 Link"
+    },
+    {
+      "type": "header",
+      "content": "Article 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "article_2_show",
+      "label": "Show Article 2",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "article_2_image",
+      "label": "Article 2 Image"
+    },
+    {
+      "type": "text",
+      "id": "article_2_title",
+      "label": "Article 2 Title",
+      "default": "Amla, Bhringraj & Castor: Why These Ingredients Matter"
+    },
+    {
+      "type": "textarea",
+      "id": "article_2_description",
+      "label": "Article 2 Description",
+      "default": "Root Reboot includes beneficial ingredients for better hair care."
+    },
+    {
+      "type": "url",
+      "id": "article_2_url",
+      "label": "Article 2 Link"
+    },
+    {
+      "type": "header",
+      "content": "Article 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "article_3_show",
+      "label": "Show Article 3",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "article_3_image",
+      "label": "Article 3 Image"
+    },
+    {
+      "type": "text",
+      "id": "article_3_title",
+      "label": "Article 3 Title",
+      "default": "Consistency Over Quick Fixes: What Real Progress Looks Like"
+    },
+    {
+      "type": "textarea",
+      "id": "article_3_description",
+      "label": "Article 3 Description",
+      "default": "Hair wellness takes time — set achievable goals."
+    },
+    {
+      "type": "url",
+      "id": "article_3_url",
+      "label": "Article 3 Link"
+    },
+    {
+      "type": "header",
+      "content": "Article 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "article_4_show",
+      "label": "Show Article 4",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "article_4_image",
+      "label": "Article 4 Image"
+    },
+    {
+      "type": "text",
+      "id": "article_4_title",
+      "label": "Article 4 Title",
+      "default": "Scalp Care 101: The Foundation of Stronger Hair"
+    },
+    {
+      "type": "textarea",
+      "id": "article_4_description",
+      "label": "Article 4 Description",
+      "default": "Discover beloved transformation stories from customers using Root Reboot."
+    },
+    {
+      "type": "url",
+      "id": "article_4_url",
+      "label": "Article 4 Link"
+    },
+    {
+      "type": "header",
+      "content": "Article 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "article_5_show",
+      "label": "Show Article 5",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "article_5_image",
+      "label": "Article 5 Image"
+    },
+    {
+      "type": "text",
+      "id": "article_5_title",
+      "label": "Article 5 Title",
+      "default": "Customer Stories: What \"Rooted Results\" Really Means"
+    },
+    {
+      "type": "textarea",
+      "id": "article_5_description",
+      "label": "Article 5 Description",
+      "default": "Real stories. Discover transformations from Root Reboot users."
+    },
+    {
+      "type": "url",
+      "id": "article_5_url",
+      "label": "Article 5 Link"
+    },
+    {
+      "type": "header",
+      "content": "Article 6"
+    },
+    {
+      "type": "checkbox",
+      "id": "article_6_show",
+      "label": "Show Article 6",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "article_6_image",
+      "label": "Article 6 Image"
+    },
+    {
+      "type": "text",
+      "id": "article_6_title",
+      "label": "Article 6 Title",
+      "default": "How to Apply Hair Oil the Right Way (Without Overdoing It)"
+    },
+    {
+      "type": "textarea",
+      "id": "article_6_description",
+      "label": "Article 6 Description",
+      "default": "The goal is better technique. Use Root Reboot for light nourishment."
+    },
+    {
+      "type": "url",
+      "id": "article_6_url",
+      "label": "Article 6 Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Root Reboot Journal"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,637 @@
+{% comment %}
+  Section: Hair Types + Benefits with Product Image
+  Shows hair type icons banner at top, then benefits section below
+  Save as: sections/hair-types-benefits.liquid
+{% endcomment %}
+
+<section class="kanu-hair-types-benefits" style="
+  --section-bg: {{ section.settings.section_bg_color }};
+  --banner-bg: {{ section.settings.banner_bg_color }};
+  --title-color: {{ section.settings.title_color }};
+  --text-color: {{ section.settings.text_color }};
+  --card-bg: {{ section.settings.card_bg_color }};
+  --icon-color: {{ section.settings.icon_color }};
+  --button-bg: {{ section.settings.button_bg_color }};
+  --button-text: {{ section.settings.button_text_color }};
+  --benefits-heading-size: {{ section.settings.benefits_heading_size | default: 40 }}px;
+  --card-heading-size: {{ section.settings.card_heading_size }}px;
+  --card-heading-weight: {{ section.settings.card_heading_weight }};
+  --card-text-weight: {{ section.settings.card_text_weight }};
+">
+
+  <!-- HAIR TYPES BANNER -->
+  {% if section.settings.show_hair_types %}
+  {% assign show_only_marquee = false %}
+  {% if section.settings.marquee_only %}
+    {% assign show_only_marquee = true %}
+  {% elsif section.settings.hide_benefits_header %}
+    {% assign has_benefit_blocks_check = false %}
+    {% for block in section.blocks %}
+      {% if block.type == 'benefit' %}
+        {% assign has_benefit_blocks_check = true %}
+        {% break %}
+      {% endif %}
+    {% endfor %}
+    {% unless has_benefit_blocks_check or section.settings.product_image != blank %}
+      {% assign show_only_marquee = true %}
+    {% endunless %}
+  {% endif %}
+  <div class="hair-types-banner{% if show_only_marquee %} hair-types-banner--last{% endif %}">
+    <div class="hair-types-wrapper">
+      <div class="hair-types-heading">
+        {{ section.settings.banner_text_before }}
+        <em>{{ section.settings.banner_text_emphasis }}</em>
+      </div>
+      <div class="hair-types-scroll">
+        <div class="hair-types-track">
+          {% comment %} Repeat 4 copies so there's always enough content to fill any screen width {% endcomment %}
+          {% for i in (1..4) %}
+          <div class="hair-types-list">
+            {% for block in section.blocks %}
+              {% if block.type == 'hair_type' %}
+                <div class="hair-type-item"{% if i == 1 %} {{ block.shopify_attributes }}{% endif %}>
+                  <div class="hair-type-icon">
+                    {% if block.settings.icon != blank %}
+                      {{ block.settings.icon | image_url: width: 120 | image_tag: class: 'hair-icon-img', loading: 'lazy', alt: block.settings.label }}
+                    {% else %}
+                      <div class="hair-icon-placeholder">👤</div>
+                    {% endif %}
+                  </div>
+                  <span class="hair-type-label">{{ block.settings.label }}</span>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- BENEFITS SECTION -->
+  {% unless section.settings.marquee_only %}
+  {% assign has_benefit_blocks = false %}
+  {% for block in section.blocks %}
+    {% if block.type == 'benefit' %}
+      {% assign has_benefit_blocks = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+  {% assign has_content_below = false %}
+  {% if has_benefit_blocks or section.settings.product_image != blank %}
+    {% assign has_content_below = true %}
+  {% endif %}
+  {% unless section.settings.hide_benefits_header == false and has_content_below == false %}
+  <div class="benefits-section{% if section.settings.hide_benefits_header and has_content_below == false %} benefits-section--no-spacing{% endif %}">
+    <div class="benefits-container">
+
+      {% unless section.settings.hide_benefits_header %}
+      <div class="benefits-header">
+        <h2 class="benefits-title">
+          {{ section.settings.benefits_heading_before }}{% if section.settings.heading_emphasis_new_line %}<br>{% endif %}
+          <em>{{ section.settings.benefits_heading_emphasis }}</em>
+        </h2>
+        {% if section.settings.benefits_subtitle != blank %}
+          <p class="benefits-subtitle">{{ section.settings.benefits_subtitle }}</p>
+        {% endif %}
+        {% if section.settings.button_label != blank %}
+          <a href="{{ section.settings.button_link | default: '#' }}" class="benefits-cta">
+            {{ section.settings.button_label }}
+          </a>
+        {% endif %}
+      </div>
+      {% endunless %}
+
+      {% if has_content_below %}
+      <div class="benefits-content">
+        <div class="benefits-list" id="benefits-list-{{ section.id }}">
+          {% assign benefit_index = 0 %}
+          {% for block in section.blocks %}
+            {% if block.type == 'benefit' %}
+              <div class="benefit-card" data-index="{{ benefit_index }}" {{ block.shopify_attributes }}>
+                <div class="benefit-icon">
+                  {% if block.settings.custom_icon != blank %}
+                    {{ block.settings.custom_icon | image_url: width: 100 | image_tag: class: 'benefit-icon-img', loading: 'lazy' }}
+                  {% else %}
+                    {% case block.settings.icon %}
+                      {% when 'refresh' %}
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+                      {% when 'heart' %}
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                      {% when 'leaf' %}
+                        <svg viewBox="0 0 24 24" fill="none"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+                    {% endcase %}
+                  {% endif %}
+                </div>
+                <div class="benefit-content">
+                  <h3 class="benefit-title">{{ block.settings.title }}</h3>
+                  <p class="benefit-text">{{ block.settings.description }}</p>
+                </div>
+              </div>
+              {% assign benefit_index = benefit_index | plus: 1 %}
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class="benefits-image">
+          {% if section.settings.product_image != blank %}
+            {{ section.settings.product_image | image_url: width: 1200 | image_tag: loading: 'lazy', class: 'product-img', alt: 'Product' }}
+          {% else %}
+            <div class="image-placeholder"></div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Navigation Dots (mobile only) -->
+      {% assign dot_count = 0 %}
+      {% for block in section.blocks %}
+        {% if block.type == 'benefit' %}
+          {% assign dot_count = dot_count | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+      {% if dot_count > 1 %}
+      <div class="rr-benefits__dots" id="benefits-dots-{{ section.id }}" aria-hidden="true">
+        {% for i in (1..dot_count) %}
+          <button
+            class="rr-benefits__dot{% if forloop.first %} rr-benefits__dot--active{% endif %}"
+            data-index="{{ forloop.index0 }}"
+            aria-label="Go to benefit {{ forloop.index }}"
+          ></button>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+  {% endunless %}
+  {% endunless %}
+
+</section>
+
+<style>
+  .kanu-hair-types-benefits { background: var(--section-bg); }
+
+  /* ===== HAIR TYPES BANNER ===== */
+  .hair-types-banner { background: var(--banner-bg); padding: 30px 0; border-bottom: 1px solid #f0f0f0; }
+  .hair-types-banner--last { border-bottom: none !important; }
+  .hair-types-wrapper { display: flex; align-items: center; gap: 40px; overflow: hidden; }
+  .hair-types-heading {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.4rem;
+    color: var(--title-color);
+    white-space: nowrap;
+    font-weight: 400;
+    flex-shrink: 0;
+    padding-left: 20px;
+  }
+  .hair-types-heading em { font-style: italic; }
+
+  /* Scroll container: clips the track */
+  .hair-types-scroll {
+    overflow: hidden;
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Track: holds 4 identical lists side by side, no gap between lists */
+  .hair-types-track {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    /* Animate exactly 25% (= 1 list out of 4 identical lists) so loop is seamless */
+    animation: marqueeScroll 30s linear infinite;
+  }
+
+  .hair-types-banner:hover .hair-types-track { animation-play-state: paused; }
+
+  @keyframes marqueeScroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-25%); }
+  }
+
+  /* Each list: items sit flush, spacing is padding on each item */
+  .hair-types-list {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  /* Spacing lives on the item itself so total width is always accurate */
+  .hair-type-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-right: 40px; /* this gap becomes part of the measured width */
+  }
+
+  .hair-type-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
+  .hair-icon-img { width: 100%; height: 100%; object-fit: contain; }
+  .hair-icon-placeholder { font-size: 28px; }
+  .hair-type-label { font-size: 14px; color: var(--text-color); font-weight: 400; white-space: nowrap; }
+
+  /* ===== BENEFITS SECTION ===== */
+  .benefits-section { padding: 100px 20px 0 !important; }
+  .benefits-section--no-spacing { padding: 0 !important; margin: 0 !important; }
+  .benefits-container { max-width: 1200px; margin: 0 auto; }
+
+  .benefits-header { text-align: center; margin-bottom: 40px !important; max-width: 800px; margin-left: auto; margin-right: auto; }
+  .benefits-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: var(--benefits-heading-size);
+    font-weight: 200;
+    color: var(--title-color);
+    margin-bottom: 18px;
+    line-height: 1.25;
+    letter-spacing: 0.01em;
+  }
+  .benefits-title em { font-style: italic; font-weight: 200; }
+  .benefits-subtitle { font-size: 15.5px; color: var(--text-color); max-width: 680px; margin: 0 auto 28px !important; line-height: 1.65; word-break: keep-all; overflow-wrap: break-word; }
+  .benefits-subtitle p { margin: 0; }
+  .benefits-cta {
+    display: inline-block; padding: 10px 32px;
+    background: var(--button-bg); color: var(--button-text);
+    border-radius: 10px; text-decoration: none;
+    font-size: 14.5px; font-weight: 600;
+    transition: opacity 0.3s ease; letter-spacing: 0.2px; margin-top: 5px !important;
+  }
+  .benefits-cta:hover { opacity: 0.9; }
+
+  .benefits-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: stretch;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .benefits-list { display: flex; flex-direction: column; gap: 28px !important; width: 100%; order: 1; }
+
+  .benefit-card {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    background: var(--card-bg) !important;
+    padding: 24px 24px 24px 24px !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(0,0,0,0.06) !important;
+    box-sizing: border-box !important;
+    gap: 0 !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .benefit-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+
+  .benefit-icon {
+    flex-shrink: 0 !important;
+    width: 32px !important;
+    height: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: var(--icon-color) !important;
+    margin: 0 0 16px 0 !important;
+    padding: 0 !important;
+    align-self: flex-start !important;
+  }
+  .benefit-icon svg {
+    width: 28px !important;
+    height: 28px !important;
+    stroke: currentColor !important;
+    stroke-width: 2 !important;
+    fill: none !important;
+    display: block !important;
+  }
+  .benefit-icon-img { width: 28px !important; height: 28px !important; object-fit: contain !important; display: block !important; }
+
+  .benefit-content {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    gap: 0 !important;
+  }
+  .benefit-title {
+    font-family: 'Playfair Display', Georgia, serif !important;
+    font-size: 20px !important;
+    font-weight: var(--card-heading-weight) !important;
+    color: var(--title-color) !important;
+    margin: 0 0 4px 0 !important;
+    padding: 0 !important;
+    line-height: 1.3 !important;
+    letter-spacing: -0.01em !important;
+  }
+  .benefit-text {
+    font-size: 18px !important;
+    font-weight: var(--card-text-weight) !important;
+    color: var(--text-color) !important;
+    line-height: 1.6 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: 'Figtree', -apple-system, sans-serif !important;
+  }
+  .benefits-image {
+    width: 100%; border-radius: 16px; overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08); order: 2;
+    align-self: stretch; display: flex; min-height: 0;
+  }
+  .benefits-image .product-img { width: 100%; height: 100%; min-height: 360px; object-fit: cover; object-position: center; display: block; }
+  .benefits-image .image-placeholder { width: 100%; min-height: 360px; flex: 1; }
+  .product-img { width: 100%; height: auto; display: block; }
+  .image-placeholder {
+    width: 100%; aspect-ratio: 4 / 5;
+    background: linear-gradient(90deg, rgba(0,0,0,.04) 1px, transparent 1px) 0 0 / 40px 40px,
+      linear-gradient(0deg, rgba(0,0,0,.04) 1px, transparent 1px) 0 0 / 40px 40px, #f5f3f0;
+  }
+
+  .rr-benefits__dots { display: none; }
+
+  @media (max-width: 1024px) {
+    .benefits-section, .benefits-container { overflow-x: hidden; }
+
+    .benefits-content {
+      grid-template-columns: 1fr !important;
+      gap: 0 !important; /* gap handled by image margin-bottom */
+      max-width: 100%;
+      padding: 0 24px !important;
+      box-sizing: border-box !important;
+    }
+
+    .benefits-image {
+      order: 1;
+      min-height: 0;
+      width: 100%;
+      max-width: 100%;
+      margin-bottom: 40px !important; /* MOBILE: 40px after image → cards */
+    }
+    .benefits-image .product-img,
+    .benefits-image .image-placeholder {
+      min-height: 0;
+      max-height: 420px;
+      object-fit: contain;
+      object-position: center;
+      width: 100%;
+    }
+
+    .benefits-list {
+      order: 2 !important;
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      scroll-snap-type: x mandatory !important;
+      scroll-behavior: smooth !important;
+      -webkit-overflow-scrolling: touch !important;
+      gap: 16px !important;
+      scrollbar-width: none !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+      padding: 0 24px 4px !important; /* side padding so first/last card has breathing room */
+    }
+    .benefits-list::-webkit-scrollbar { display: none; }
+
+    .benefit-card {
+      flex: 0 0 calc(85vw - 24px) !important; /* narrower so gap + next card peek is visible */
+      width: calc(85vw - 24px) !important;
+      min-width: 0 !important;
+      max-width: 360px !important;
+      scroll-snap-align: start !important;
+      scroll-snap-stop: always !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04) !important;
+      align-items: flex-start !important;
+      text-align: left !important;
+    }
+
+    .rr-benefits__dots {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      margin-bottom: 4px;
+      padding: 0 20px;
+    }
+
+    .rr-benefits__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.18);
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.25s ease, transform 0.25s ease;
+    }
+
+    .rr-benefits__dot--active {
+      background: var(--button-bg, #a0475a);
+      transform: scale(1.35);
+    }
+
+    .benefit-icon { margin: 0 0 14px 0 !important; align-self: flex-start !important; }
+    .benefit-title { font-size: 20px !important; margin-bottom: 4px !important; }
+    .benefit-text { font-size: 18px !important; }
+  }
+
+  @media (max-width: 768px) {
+    .hair-types-banner { padding: 24px 20px; }
+    .hair-types-wrapper { gap: 24px; }
+    .hair-types-heading { font-size: 1.2rem; }
+    .benefits-section { padding: 100px 12px 0 !important; }
+    .benefits-container { padding: 0 !important; }
+    .benefits-title { font-size: clamp(28px, calc(var(--benefits-heading-size) * 0.8), 42px); font-weight: 200; }
+    .benefits-title em { font-weight: 200; }
+    .benefits-header { margin-bottom: 40px !important; max-width: 360px; margin-left: auto; margin-right: auto; }
+    .benefits-subtitle { max-width: 100%; min-width: 0; word-break: keep-all; overflow-wrap: break-word; }
+
+    .benefits-content { padding: 0 16px; gap: 16px; }
+
+    .benefit-card {
+      flex: 0 0 calc(85vw - 24px) !important;
+      width: calc(85vw - 24px) !important;
+      min-width: 0 !important;
+      max-width: 360px !important;
+      align-items: flex-start !important;
+      text-align: left !important;
+    }
+    .benefit-title { font-size: 20px !important; margin-bottom: 4px !important; text-align: left !important; }
+    .benefit-text { font-size: 18px !important; text-align: left !important; margin-top: 0 !important; }
+    .benefit-icon { align-self: flex-start !important; margin: 0 0 14px 0 !important; }
+    .benefit-content { text-align: left !important; }
+    .benefits-content { gap: 16px; }
+    .benefits-image .product-img, .benefits-image .image-placeholder { max-height: 380px; }
+  }
+
+  @media (max-width: 640px) {
+    .hair-type-item { gap: 8px; padding-right: 28px; }
+    .hair-type-icon { width: 30px; height: 30px; }
+    .hair-type-label { font-size: 13px; }
+    .benefits-section { padding: 100px 12px 0 !important; }
+    .benefits-title { font-size: clamp(26px, calc(var(--benefits-heading-size) * 0.72), 38px); font-weight: 200; }
+    .benefits-title em { font-weight: 200; }
+    .benefits-content { gap: 16px; padding: 0 12px; }
+    .benefit-card {
+      flex: 0 0 calc(85vw - 24px) !important;
+      width: calc(85vw - 24px) !important;
+      min-width: 0 !important;
+      max-width: 360px !important;
+      align-items: flex-start !important;
+      text-align: left !important;
+    }
+    .benefit-title { font-size: 20px !important; margin-bottom: 4px !important; text-align: left !important; }
+    .benefit-text { font-size: 18px !important; text-align: left !important; margin-top: 0 !important; }
+    .benefit-icon { margin: 0 0 14px 0 !important; align-self: flex-start !important; }
+    .benefit-content { text-align: left !important; }
+    .benefit-icon svg { width: 28px !important; height: 28px !important; }
+  }
+</style>
+
+<script>
+(function() {
+  function initBenefitsDots(sectionId) {
+    var list = document.getElementById('benefits-list-' + sectionId);
+    var dotsContainer = document.getElementById('benefits-dots-' + sectionId);
+    if (!list || !dotsContainer) return;
+
+    var dots = dotsContainer.querySelectorAll('.rr-benefits__dot');
+    var cards = list.querySelectorAll('.benefit-card');
+    if (!dots.length || !cards.length) return;
+
+    var activeIndex = 0;
+
+    function setActiveDot(index) {
+      if (index === activeIndex) return;
+      dots[activeIndex].classList.remove('rr-benefits__dot--active');
+      activeIndex = index;
+      dots[activeIndex].classList.add('rr-benefits__dot--active');
+    }
+
+    dots.forEach(function(dot) {
+      dot.addEventListener('click', function() {
+        var idx = parseInt(dot.getAttribute('data-index'), 10);
+        var card = cards[idx];
+        if (card) {
+          list.scrollTo({ left: card.offsetLeft - list.offsetLeft, behavior: 'smooth' });
+        }
+      });
+    });
+
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var idx = parseInt(entry.target.getAttribute('data-index'), 10);
+          if (!isNaN(idx)) setActiveDot(idx);
+        }
+      });
+    }, {
+      root: list,
+      threshold: 0.6
+    });
+
+    cards.forEach(function(card) { observer.observe(card); });
+  }
+
+  function init() {
+    document.querySelectorAll('[id^="benefits-list-"]').forEach(function(el) {
+      var id = el.id.replace('benefits-list-', '');
+      initBenefitsDots(id);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  document.addEventListener('shopify:section:load', init);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Hair Types + Benefits",
+  "settings": [
+    { "type": "header", "content": "Hair Types Banner" },
+    { "type": "checkbox", "id": "show_hair_types", "label": "Show Hair Types Banner", "default": true },
+    { "type": "checkbox", "id": "marquee_only", "label": "Show Marquee Only (Hide Benefits Section)", "default": false, "info": "When enabled, only the marquee banner will be displayed." },
+    { "type": "text", "id": "banner_text_before", "label": "Banner Text (before)", "default": "Kanu is " },
+    { "type": "text", "id": "banner_text_emphasis", "label": "Banner Text (italic)", "default": "made for" },
+    { "type": "header", "content": "Benefits Section" },
+    { "type": "checkbox", "id": "hide_benefits_header", "label": "Hide Benefits Header (Heading, Text & Button)", "default": false },
+    { "type": "text", "id": "benefits_heading_before", "label": "Benefits Heading (before)", "default": "Benefits That Build with " },
+    { "type": "text", "id": "benefits_heading_emphasis", "label": "Benefits Heading (italic)", "default": "Consistency" },
+    { "type": "checkbox", "id": "heading_emphasis_new_line", "label": "Put italic word on new line", "default": false },
+    { "type": "range", "id": "benefits_heading_size", "label": "Benefits heading size", "min": 24, "max": 52, "step": 2, "unit": "px", "default": 40 },
+    { "type": "textarea", "id": "benefits_subtitle", "label": "Benefits Subtitle", "default": "Root Reboot supports healthier hair with regular use, focusing on strength, scalp nourishment, and balance." },
+    { "type": "text", "id": "button_label", "label": "Button Label", "default": "Start Your Root Reboot" },
+    { "type": "url", "id": "button_link", "label": "Button Link" },
+    { "type": "image_picker", "id": "product_image", "label": "Product Image" },
+    { "type": "header", "content": "Card Typography" },
+    { "type": "range", "id": "card_heading_size", "label": "Card Heading Size", "min": 14, "max": 24, "step": 1, "unit": "px", "default": 18 },
+    { "type": "select", "id": "card_heading_weight", "label": "Card Heading Weight", "options": [
+      { "value": "300", "label": "Light" },
+      { "value": "400", "label": "Regular" },
+      { "value": "500", "label": "Medium" },
+      { "value": "600", "label": "Semi-bold" }
+    ], "default": "300" },
+    { "type": "select", "id": "card_text_weight", "label": "Card Description Text Weight", "options": [
+      { "value": "400", "label": "Regular" },
+      { "value": "500", "label": "Medium" },
+      { "value": "600", "label": "Semi-bold" }
+    ], "default": "400" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "section_bg_color", "label": "Section Background", "default": "#ffffff" },
+    { "type": "color", "id": "banner_bg_color", "label": "Banner Background", "default": "#faf8f5" },
+    { "type": "color", "id": "card_bg_color", "label": "Benefit Card Background", "default": "#F9F8F3" },
+    { "type": "color", "id": "title_color", "label": "Title Color", "default": "#2c2c2c" },
+    { "type": "color", "id": "text_color", "label": "Text Color", "default": "#5a5a5a" },
+    { "type": "color", "id": "icon_color", "label": "Icon Color", "default": "#d98b90" },
+    { "type": "color", "id": "button_bg_color", "label": "Button Background", "default": "#a0475a" },
+    { "type": "color", "id": "button_text_color", "label": "Button Text", "default": "#ffffff" }
+  ],
+  "blocks": [
+    {
+      "type": "hair_type",
+      "name": "Hair Type",
+      "limit": 10,
+      "settings": [
+        { "type": "image_picker", "id": "icon", "label": "Hair Type Icon" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Curly Hair" }
+      ]
+    },
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "limit": 6,
+      "settings": [
+        { "type": "image_picker", "id": "custom_icon", "label": "Custom Icon (optional)" },
+        { "type": "select", "id": "icon", "label": "Default Icon", "options": [
+          { "value": "refresh", "label": "Refresh" },
+          { "value": "heart", "label": "Heart" },
+          { "value": "leaf", "label": "Leaf" }
+        ], "default": "refresh" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Stronger Roots Over Time" },
+        { "type": "textarea", "id": "description", "label": "Description", "default": "Promotes scalp health to reduce breakage and improve hair resilience." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hair Types + Benefits",
+      "blocks": [
+        { "type": "hair_type", "settings": { "label": "Curly Hair" } },
+        { "type": "hair_type", "settings": { "label": "Straight Hair" } },
+        { "type": "hair_type", "settings": { "label": "Coily / Textured Hair" } },
+        { "type": "hair_type", "settings": { "label": "Wavy Hair" } },
+        { "type": "benefit", "settings": { "icon": "refresh", "title": "Stronger Roots Over Time", "description": "Promotes scalp health to reduce breakage and improve hair resilience." } },
+        { "type": "benefit", "settings": { "icon": "heart", "title": "Reduced Hair Fall", "description": "Works with your hair cycle to gradually minimize hair fall." } },
+        { "type": "benefit", "settings": { "icon": "leaf", "title": "Healthier Scalp Environment", "description": "Nourishes the scalp deeply, supporting follicles and improving overall scalp balance." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

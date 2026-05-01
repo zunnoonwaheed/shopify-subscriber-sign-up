@@ -1,0 +1,451 @@
+{% comment %}
+  Testimonials Section - 3 Cards Desktop, Horizontal Scroll Mobile
+  Save as: sections/testimonials.liquid
+{% endcomment %}
+
+<section class="rr-testimonials" style="
+  --bg: {{ section.settings.bg_color }};
+  --title: {{ section.settings.title_color }};
+  --text: {{ section.settings.text_color }};
+  --muted: {{ section.settings.muted_color }};
+  --card-bg: {{ section.settings.card_bg }};
+  --accent: {{ section.settings.accent_color }};
+  --btn-bg: {{ section.settings.button_bg }};
+  --btn-text: {{ section.settings.button_text }};
+  --card-btn-bg: {{ section.settings.card_button_bg }};
+  --card-btn-text: {{ section.settings.card_button_text }};
+  --heading-font: '{{ section.settings.heading_font }}', Georgia, serif;
+  --body-font: '{{ section.settings.body_font }}', -apple-system, sans-serif;
+  --heading-weight: {{ section.settings.heading_weight }};
+  --section-padding-top: {{ section.settings.padding_top }}px;
+  --section-padding-bottom: {{ section.settings.padding_bottom }}px;
+">
+  <div class="rr-testimonials__wrap">
+
+    <!-- HEADER -->
+    <header class="rr-testimonials__header">
+      <h2 class="rr-testimonials__title">
+        {{ section.settings.heading_before | escape }}
+        <em>{{ section.settings.heading_emphasis | escape }}</em>
+      </h2>
+
+      {% if section.settings.subheading != blank %}
+        <div class="rr-testimonials__subtitle">
+          {{ section.settings.subheading }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.button_label != blank %}
+        <a class="rr-testimonials__btn" href="{{ section.settings.button_link | default: '#' }}">
+          {{ section.settings.button_label | escape }}
+        </a>
+      {% endif %}
+    </header>
+
+    <!-- TESTIMONIALS GRID -->
+    <div class="rr-testimonials__grid">
+      {% for block in section.blocks %}
+        <div class="rr-testimonials__card" {{ block.shopify_attributes }}>
+          
+          {% if block.settings.image != blank %}
+            <div class="rr-testimonials__image">
+              {{ block.settings.image | image_url: width: 800 | image_tag:
+                loading: 'lazy',
+                class: 'rr-testimonials__img',
+                alt: block.settings.name | escape
+              }}
+            </div>
+          {% endif %}
+
+          <div class="rr-testimonials__content">
+            <div class="rr-testimonials__header-row">
+              {% if block.settings.name != blank %}
+                <h3 class="rr-testimonials__name">{{ block.settings.name | escape }}</h3>
+              {% endif %}
+
+              {% if block.settings.rating != blank %}
+                <div class="rr-testimonials__rating">
+                  <span class="rr-testimonials__star">★</span>
+                  <span class="rr-testimonials__rating-text">{{ block.settings.rating }}</span>
+                </div>
+              {% endif %}
+            </div>
+
+            {% if block.settings.quote != blank %}
+              <p class="rr-testimonials__quote">{{ block.settings.quote }}</p>
+            {% endif %}
+
+            {% if block.settings.button_label != blank %}
+              <a class="rr-testimonials__card-btn" href="{{ block.settings.button_link | default: '#' }}">
+                {{ block.settings.button_label | escape }}
+              </a>
+            {% endif %}
+          </div>
+
+        </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Figtree:wght@300;400;500;600;700&display=swap');
+
+  .rr-testimonials {
+    background: var(--bg);
+    padding: 100px 0 0 !important; /* TOP: 100px, BOTTOM: 0 */
+    font-family: var(--body-font);
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  .rr-testimonials__wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+    overflow-x: hidden;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* HEADER: 48px button → cards */
+  .rr-testimonials__header {
+    text-align: center;
+    margin-bottom: 48px !important; /* DESKTOP: 48px header → cards */
+  }
+
+  .rr-testimonials__title {
+    font-family: var(--heading-font);
+    font-size: 32px;
+    font-weight: var(--heading-weight);
+    line-height: 1.25;
+    color: var(--title);
+    margin: 0 0 16px 0 !important;
+    letter-spacing: -0.01em;
+  }
+
+  .rr-testimonials__title em {
+    font-style: italic;
+    font-weight: var(--heading-weight);
+  }
+
+  /* subtext → button: 20px */
+  .rr-testimonials__subtitle {
+    max-width: 720px;
+    margin: 0 auto 20px !important; /* DESKTOP: 20px text → button */
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .rr-testimonials__subtitle p { margin: 0; }
+
+  /* Header Button */
+  .rr-testimonials__btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 13px 32px !important;
+    border-radius: 8px !important;
+    background: var(--btn-bg) !important;
+    color: var(--btn-text) !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    box-shadow: 0 4px 14px rgba(145, 38, 67, 0.25) !important;
+    transition: all 0.2s ease !important;
+    letter-spacing: 0.2px !important;
+  }
+
+  .rr-testimonials__btn:hover {
+    transform: translateY(-1px);
+    opacity: 0.92;
+    box-shadow: 0 6px 18px rgba(145, 38, 67, 0.3);
+  }
+
+  /* DESKTOP GRID: 20px between cards */
+  .rr-testimonials__grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 20px !important;          /* DESKTOP: 20px between cards */
+    width: 100%;
+    overflow: visible;
+    margin: 0;
+    padding: 0;
+  }
+
+  .rr-testimonials__card {
+    background: var(--card-bg);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  .rr-testimonials__image {
+    width: 100%;
+    height: 260px;
+    overflow: hidden;
+    background: #F7F5F2;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .rr-testimonials__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+  }
+
+  /* Card content: 16px after image, 16px text → button */
+  .rr-testimonials__content {
+    padding: 16px 22px 26px !important; /* 16px top after image */
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .rr-testimonials__header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px !important;
+    gap: 12px;
+  }
+
+  .rr-testimonials__name {
+    font-family: var(--heading-font);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--title);
+    margin: 0 !important;
+    flex-shrink: 0;
+  }
+
+  .rr-testimonials__rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .rr-testimonials__star {
+    color: var(--accent);
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .rr-testimonials__rating-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--title);
+    line-height: 1;
+  }
+
+  /* 16px quote → button */
+  .rr-testimonials__quote {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--text);
+    margin: 0 0 16px 0 !important; /* DESKTOP: 16px text → button */
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* Card Button */
+  .rr-testimonials__card-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 11px 24px !important;
+    border-radius: 7px !important;
+    background: var(--card-btn-bg) !important;
+    color: var(--card-btn-text) !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    transition: all 0.2s ease !important;
+    align-self: flex-start !important;
+    letter-spacing: 0.15px !important;
+  }
+
+  .rr-testimonials__card-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  /* Tablet */
+  @media (max-width: 1200px) {
+    .rr-testimonials__wrap { padding: 0 32px; max-width: 100%; }
+    .rr-testimonials__grid { grid-template-columns: repeat(3, 1fr) !important; gap: 20px !important; }
+  }
+
+  @media (max-width: 1024px) {
+    .rr-testimonials__wrap { padding: 0 24px; max-width: 100%; }
+    .rr-testimonials__grid { grid-template-columns: repeat(2, 1fr) !important; gap: 20px !important; }
+    .rr-testimonials__title { font-size: 34px; }
+  }
+
+  @media (max-width: 768px) {
+    .rr-testimonials__grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+  }
+
+  /* MOBILE */
+  @media (max-width: 640px) {
+    .rr-testimonials {
+      padding: 100px 0 0 !important; /* MOBILE: TOP 100px, BOTTOM 0 */
+      overflow: hidden;
+    }
+
+    .rr-testimonials__wrap { padding: 0; overflow: visible; }
+
+    .rr-testimonials__header {
+      margin-bottom: 40px !important; /* MOBILE: 40px button → cards */
+      padding: 0 24px;
+    }
+
+    .rr-testimonials__title {
+      font-size: 30px;
+      margin-bottom: 14px !important;
+    }
+
+    /* MOBILE: 20px subtext → button */
+    .rr-testimonials__subtitle {
+      font-size: 14.5px;
+      margin-bottom: 20px !important; /* MOBILE: 20px text → button */
+    }
+
+    .rr-testimonials__btn {
+      padding: 12px 28px !important;
+      font-size: 13.5px !important;
+    }
+
+    /* HORIZONTAL SCROLL */
+    .rr-testimonials__grid {
+      display: flex !important;
+      flex-direction: row !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      scroll-snap-type: x mandatory !important;
+      scroll-behavior: smooth !important;
+      -webkit-overflow-scrolling: touch !important;
+      gap: 16px !important;
+      scrollbar-width: none !important;
+      padding: 0 24px 12px 24px !important;
+      grid-template-columns: none !important;
+    }
+
+    .rr-testimonials__grid::-webkit-scrollbar { display: none; }
+
+    .rr-testimonials__card {
+      flex: 0 0 calc(100% - 48px) !important;
+      min-width: calc(100% - 48px) !important;
+      scroll-snap-align: center !important;
+      scroll-snap-stop: always !important;
+    }
+
+    .rr-testimonials__image { height: 300px !important; }
+
+    /* MOBILE card content: 16px after image, 16px text → button */
+    .rr-testimonials__content {
+      padding: 16px 26px 28px !important; /* 16px top after image */
+    }
+
+    .rr-testimonials__name { font-size: 17px !important; }
+
+    .rr-testimonials__quote {
+      font-size: 14px !important;
+      margin-bottom: 16px !important; /* MOBILE: 16px text → button */
+    }
+  }
+
+  @media (max-width: 400px) {
+    .rr-testimonials__grid { padding: 0 20px 12px 20px !important; }
+    .rr-testimonials__card {
+      flex: 0 0 calc(100% - 40px) !important;
+      min-width: calc(100% - 40px) !important;
+    }
+    .rr-testimonials__header { padding: 0 20px !important; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "settings": [
+    { "type": "header", "content": "Section Header" },
+    { "type": "text", "id": "heading_before", "label": "Heading (before italic)", "default": "Loved by " },
+    { "type": "text", "id": "heading_emphasis", "label": "Heading (italic)", "default": "Real Roots, Real People" },
+    { "type": "richtext", "id": "subheading", "label": "Subheading", "default": "<p>Rated highly by customers who made Root Reboot part of their routine — real stories, real results, no exaggeration.</p>" },
+    { "type": "text", "id": "button_label", "label": "Header button label", "default": "Shop Root Reboot" },
+    { "type": "url", "id": "button_link", "label": "Header button link" },
+    { "type": "header", "content": "Spacing" },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 100, "step": 10, "unit": "px", "default": 100 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 100, "step": 10, "unit": "px", "default": 0 },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg_color", "label": "Section background", "default": "transparent" },
+    { "type": "color", "id": "card_bg", "label": "Card background", "default": "#F9F8F3" },
+    { "type": "color", "id": "title_color", "label": "Title color", "default": "#1F2A44" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#1F2A44" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#5A667A" },
+    { "type": "color", "id": "accent_color", "label": "Accent (star) color", "default": "#912643" },
+    { "type": "header", "content": "Header Button" },
+    { "type": "color", "id": "button_bg", "label": "Header button background", "default": "#E89BA8" },
+    { "type": "color", "id": "button_text", "label": "Header button text", "default": "#FFFFFF" },
+    { "type": "header", "content": "Card Button" },
+    { "type": "color", "id": "card_button_bg", "label": "Card button background", "default": "#E89BA8" },
+    { "type": "color", "id": "card_button_text", "label": "Card button text", "default": "#FFFFFF" },
+    { "type": "header", "content": "Typography" },
+    { "type": "select", "id": "heading_font", "label": "Heading font", "options": [
+      { "value": "Playfair Display", "label": "Playfair Display (Serif)" },
+      { "value": "Georgia", "label": "Georgia (Serif)" },
+      { "value": "Figtree", "label": "Figtree (Sans-serif)" }
+    ], "default": "Playfair Display" },
+    { "type": "select", "id": "heading_weight", "label": "Heading weight", "options": [
+      { "value": "300", "label": "Light" },
+      { "value": "400", "label": "Regular" },
+      { "value": "500", "label": "Medium" },
+      { "value": "600", "label": "Semi-Bold" }
+    ], "default": "400" },
+    { "type": "select", "id": "body_font", "label": "Body font", "options": [
+      { "value": "Figtree", "label": "Figtree" },
+      { "value": "Arial", "label": "Arial" }
+    ], "default": "Figtree" }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Customer image (before/after)" },
+        { "type": "text", "id": "name", "label": "Customer name", "default": "Sophia C." },
+        { "type": "text", "id": "rating", "label": "Rating (e.g., 4.8/5.0)", "default": "4.8/5.0" },
+        { "type": "textarea", "id": "quote", "label": "Testimonial quote", "default": "Feel the difference from first use. Not greasy, just nourishing." },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop Root Reboot" },
+        { "type": "url", "id": "button_link", "label": "Button link" }
+      ]
+    }
+  ],
+  "max_blocks": 9,
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        { "type": "testimonial", "settings": { "name": "Virtually H.", "rating": "4.8/5.0", "quote": "This oil has been multipurpose and an absolute game changer in my hair care routine." } },
+        { "type": "testimonial", "settings": { "name": "Nida A.", "rating": "4.8/5.0", "quote": "Absolutely obsessed with this oil! The smell, texture and the feel." } },
+        { "type": "testimonial", "settings": { "name": "Esha K.", "rating": "4.8/5.0", "quote": "Been using this oil from past 3 months and i kid you not how much amazed i am by the results." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

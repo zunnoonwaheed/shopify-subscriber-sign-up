@@ -1,0 +1,543 @@
+{% comment %}
+  How to Use Split Section
+  Header (title + subtitle + button) above a two-column layout: image left, feature cards right
+  Save as: sections/how-to-use-split.liquid
+{% endcomment %}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Figtree:wght@300;400;500;600;700&display=swap');
+
+  .rr-howto {
+    --bg: {{ section.settings.bg_color }};
+    --title: {{ section.settings.title_color }};
+    --muted: {{ section.settings.muted_color }};
+    --accent: {{ section.settings.accent_color }};
+    --card-bg: {{ section.settings.card_bg }};
+    --btn-bg: {{ section.settings.button_bg }};
+    --btn-text: {{ section.settings.button_text_color }};
+    --heading-font: '{{ section.settings.heading_font }}', Georgia, serif;
+    --body-font: '{{ section.settings.body_font }}', -apple-system, sans-serif;
+    --heading-size: {{ section.settings.heading_size }}px;
+    background: var(--bg);
+    padding: 100px 0 100px !important;
+    font-family: var(--body-font);
+  }
+
+  .rr-howto__wrap {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+  }
+
+  /* ── TOP HEADER ── */
+  .rr-howto__header {
+    text-align: center;
+    margin-bottom: 48px !important; /* DESKTOP: 48px header → grid */
+  }
+
+  .rr-howto__title {
+    font-family: var(--heading-font);
+    font-size: 32px !important;
+    font-weight: 300;
+    color: var(--title);
+    line-height: 1.15;
+    letter-spacing: 0.01em;
+    margin: 0 0 10px 0 !important;
+  }
+  .rr-howto__title em { font-style: italic; font-weight: 300; }
+
+  .rr-howto__subtitle {
+    font-family: var(--body-font);
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto 28px !important; /* DESKTOP: 28px subtitle → button */
+  }
+  .rr-howto__subtitle p { margin: 0; }
+
+  .rr-howto__btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 16px 40px !important;
+    border-radius: 10px !important;
+    background: var(--btn-bg) !important;
+    color: var(--btn-text) !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    font-size: 15px !important;
+    font-family: var(--body-font) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,.18) !important;
+    transition: transform .15s ease, opacity .15s ease !important;
+    width: auto !important;
+    max-width: fit-content !important;
+    border: none !important;
+  }
+  .rr-howto__btn:hover { transform: translateY(-1px) !important; opacity: 0.92 !important; }
+
+  /* ── TWO COLUMN GRID ── */
+  .rr-howto__grid {
+    display: grid;
+    grid-template-columns: 1fr 1.08fr;
+    gap: clamp(18px, 3vw, 44px);
+    align-items: start !important;
+  }
+
+  /* LEFT: IMAGE — matches height of right column using JS-set height */
+  .rr-howto__media {
+    display: block;
+  }
+  .rr-howto__media-inner {
+    background: #f5f3f0;
+    border-radius: 26px;
+    overflow: hidden;
+    box-shadow: 0 10px 26px rgba(0,0,0,.06);
+  }
+  .rr-howto__img {
+    width: 100% !important;
+    height: 100% !important;
+    display: block !important;
+    object-fit: cover !important;
+    object-position: center top !important;
+  }
+
+  /* RIGHT: CARDS */
+  .rr-howto__content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rr-howto__carousel-wrap {
+    display: flex;
+    flex-direction: column;
+  }
+  .rr-howto__placeholder {
+    min-height: 400px;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,.05) 1px, transparent 1px) 0 0 / 42px 42px,
+      linear-gradient(0deg, rgba(0,0,0,.05) 1px, transparent 1px) 0 0 / 42px 42px,
+      #f2f2f2;
+  }
+
+  .rr-howto__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 28px !important;
+  }
+
+  .rr-howto__card {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 14px 22px;
+    padding: 18px 24px !important;
+    border-radius: 16px !important;
+    background: var(--card-bg) !important;
+    border: 1px solid rgba(0,0,0,0.06) !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04) !important;
+    align-items: start;
+    text-align: left;
+  }
+  .rr-howto__card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08) !important; }
+
+  .rr-howto__icon {
+    width: 40px; height: 40px;
+    display: grid; place-items: center;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+  .rr-howto__icon svg { width: 24px; height: 24px; }
+  .rr-howto__icon-img { width: 28px; height: 28px; object-fit: contain; }
+
+  .rr-howto__card-text {
+    text-align: left;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .rr-howto__card-title {
+    margin: 0 !important; padding: 0 !important;
+    font-size: 18px; line-height: 1.35;
+    color: var(--title); font-weight: 400;
+    font-family: var(--heading-font);
+    font-weight: 400 !important;
+    letter-spacing: -0.01em;
+  }
+  .rr-howto__card-body {
+    margin: 4px 0 0 0 !important; padding: 0 !important;
+    color: var(--muted); font-size: 14px; line-height: 1.55;
+    font-family: var(--body-font);
+  }
+
+  /* Dots hidden on desktop */
+  .rr-howto__dots { display: none; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 900px) {
+    .rr-howto { padding: 100px 0 100px !important; }
+
+    .rr-howto__header {
+      margin-bottom: 40px !important; /* MOBILE: 40px header → grid */
+      padding: 0 20px;
+    }
+
+    .rr-howto__title {
+      font-size: 26px !important;
+      margin-bottom: 12px !important;
+    }
+
+    .rr-howto__subtitle {
+      font-size: 14px !important;
+      margin-bottom: 28px !important; /* MOBILE: 28px subtitle → button */
+    }
+
+    .rr-howto__btn {
+      padding: 15px 36px !important;
+      font-size: 14.5px !important;
+    }
+
+    .rr-howto__grid {
+      grid-template-columns: 1fr !important;
+      gap: 28px !important;
+    }
+
+    .rr-howto__media-inner { border-radius: 22px !important; }
+
+    .rr-howto__content {
+      max-width: 360px !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+      width: 100%;
+    }
+
+    /* Cards become horizontal scroll on mobile */
+    .rr-howto__carousel-wrap {
+      width: 100vw !important;
+      margin-left: calc(-50vw + 50%) !important;
+      overflow: visible !important;
+    }
+
+    .rr-howto__cards {
+      display: flex !important;
+      flex-direction: row !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      scroll-snap-type: x mandatory !important;
+      scroll-behavior: smooth !important;
+      -webkit-overflow-scrolling: touch !important;
+      gap: 12px !important;
+      width: 100% !important;
+      margin-top: 0 !important;
+      padding: 0 20px 8px !important;
+      scrollbar-width: none !important;
+    }
+    .rr-howto__cards::-webkit-scrollbar { display: none !important; }
+
+    .rr-howto__card {
+      flex: 0 0 min(340px, calc(100vw - 48px)) !important;
+      width: min(340px, calc(100vw - 48px)) !important;
+      min-width: min(340px, calc(100vw - 48px)) !important;
+      max-width: 340px !important;
+      scroll-snap-align: center !important;
+      scroll-snap-stop: always !important;
+      grid-template-columns: 1fr !important;
+      gap: 8px !important;
+      padding: 24px !important;
+      text-align: center !important;
+      justify-items: center !important;
+      box-sizing: border-box !important;
+    }
+
+    .rr-howto__icon { margin: 0 auto !important; justify-self: center !important; }
+    .rr-howto__card-text { text-align: center !important; width: 100% !important; }
+    .rr-howto__card-title { text-align: center !important; font-weight: 400 !important; }
+    .rr-howto__card-body { text-align: center !important; }
+
+    .rr-howto__dots {
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 8px !important;
+      margin-top: 14px !important;
+      padding: 0 !important;
+    }
+    .rr-howto__dot {
+      width: 8px !important; height: 8px !important;
+      border-radius: 50% !important;
+      background: rgba(0,0,0,0.18) !important;
+      border: none !important; padding: 0 !important;
+      cursor: pointer !important; flex-shrink: 0 !important;
+      transition: background 0.25s ease, transform 0.25s ease !important;
+    }
+    .rr-howto__dot--active {
+      background: var(--accent) !important;
+      transform: scale(1.35) !important;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .rr-howto { padding: 100px 0 100px !important; }
+    .rr-howto__title { font-size: 26px !important; }
+    .rr-howto__subtitle { font-size: 13.5px !important; margin-bottom: 24px !important; }
+    .rr-howto__btn { padding: 14px 32px !important; font-size: 14px !important; }
+    .rr-howto__cards { gap: 10px !important; }
+    .rr-howto__card { padding: 24px 22px !important; }
+    .rr-howto__dots { margin-top: 12px !important; gap: 7px !important; }
+    .rr-howto__dot { width: 7px !important; height: 7px !important; }
+  }
+</style>
+
+<script>
+(function() {
+  function matchImageHeight(sectionId) {
+    var content = document.querySelector('#shopify-section-' + sectionId + ' .rr-howto__content');
+    var mediaInner = document.querySelector('#shopify-section-' + sectionId + ' .rr-howto__media-inner');
+    if (!content || !mediaInner) return;
+    if (window.innerWidth <= 900) { mediaInner.style.height = ''; return; }
+    var h = content.offsetHeight;
+    mediaInner.style.height = h + 'px';
+  }
+
+  function initHowToCarousel(sectionId) {
+    var cards  = document.getElementById('rr-howto-cards-' + sectionId);
+    var dotsEl = document.getElementById('rr-howto-dots-' + sectionId);
+    if (!cards || !dotsEl) return;
+
+    var dots    = Array.from(dotsEl.querySelectorAll('.rr-howto__dot'));
+    var cardEls = Array.from(cards.querySelectorAll('.rr-howto__card'));
+    var total   = cardEls.length;
+    if (total < 2) return;
+
+    var current = 0, ticking = false;
+
+    function setActive(index) {
+      dots[current].classList.remove('rr-howto__dot--active');
+      current = index;
+      dots[current].classList.add('rr-howto__dot--active');
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function() {
+        var containerCenter = cards.scrollLeft + cards.offsetWidth / 2;
+        var closest = 0, minDist = Infinity;
+        cardEls.forEach(function(card, i) {
+          var dist = Math.abs((card.offsetLeft + card.offsetWidth / 2) - containerCenter);
+          if (dist < minDist) { minDist = dist; closest = i; }
+        });
+        setActive(closest);
+        ticking = false;
+      });
+    }
+
+    cards.addEventListener('scroll', onScroll, { passive: true });
+
+    dots.forEach(function(dot, i) {
+      dot.addEventListener('click', function() {
+        var target = cardEls[i];
+        if (!target) return;
+        var scrollTo = target.offsetLeft - (cards.offsetWidth / 2) + (target.offsetWidth / 2);
+        cards.scrollTo({ left: scrollTo, behavior: 'smooth' });
+        setActive(i);
+      });
+    });
+
+    dotsEl.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowRight' && current < total - 1) dots[current + 1].click();
+      if (e.key === 'ArrowLeft'  && current > 0)         dots[current - 1].click();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      matchImageHeight('{{ section.id }}');
+      initHowToCarousel('{{ section.id }}');
+    });
+  } else {
+    matchImageHeight('{{ section.id }}');
+    initHowToCarousel('{{ section.id }}');
+  }
+
+  window.addEventListener('resize', function() { matchImageHeight('{{ section.id }}'); });
+
+  document.addEventListener('shopify:section:load', function(e) {
+    if (e.detail && e.detail.sectionId === '{{ section.id }}') {
+      matchImageHeight('{{ section.id }}');
+      initHowToCarousel('{{ section.id }}');
+    }
+  });
+})();
+</script>
+
+<section class="rr-howto">
+  <div class="rr-howto__wrap">
+
+    <!-- TOP HEADER -->
+    <div class="rr-howto__header">
+      <h2 class="rr-howto__title">
+        {{ section.settings.heading_before | escape }}
+        <em>{{ section.settings.heading_emphasis | escape }}</em>
+      </h2>
+      {% if section.settings.subtext != blank %}
+        <div class="rr-howto__subtitle">{{ section.settings.subtext }}</div>
+      {% endif %}
+      {% if section.settings.button_label != blank %}
+        <a class="rr-howto__btn" href="{{ section.settings.button_link | default: '#' }}">
+          {{ section.settings.button_label | escape }}
+        </a>
+      {% endif %}
+    </div>
+
+    <!-- TWO COLUMN GRID -->
+    <div class="rr-howto__grid">
+
+      <!-- LEFT: IMAGE -->
+      <div class="rr-howto__media">
+        <div class="rr-howto__media-inner">
+          {% if section.settings.image != blank %}
+            {{ section.settings.image | image_url: width: 1800 | image_tag:
+              loading: 'lazy',
+              class: 'rr-howto__img',
+              alt: section.settings.image.alt | escape
+            }}
+          {% else %}
+            <div class="rr-howto__placeholder"></div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- RIGHT: FEATURE CARDS -->
+      <div class="rr-howto__content">
+        <div class="rr-howto__carousel-wrap">
+          <div class="rr-howto__cards" id="rr-howto-cards-{{ section.id }}">
+            {% for block in section.blocks %}
+              <div class="rr-howto__card" {{ block.shopify_attributes }}>
+                <div class="rr-howto__icon" aria-hidden="true">
+                  {% if block.settings.custom_icon != blank %}
+                    {{ block.settings.custom_icon | image_url: width: 100 | image_tag:
+                      loading: 'lazy', class: 'rr-howto__icon-img', alt: '' }}
+                  {% else %}
+                    {% case block.settings.icon %}
+                      {% when 'drops' %}
+                        <svg viewBox="0 0 24 24" fill="none">
+                          <path d="M12 2C12 2 6 9 6 13a6 6 0 0 0 12 0c0-4-6-11-6-11Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                          <path d="M9 13a3 3 0 0 0 6 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                      {% when 'clock' %}
+                        <svg viewBox="0 0 24 24" fill="none">
+                          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
+                          <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      {% when 'refresh' %}
+                        <svg viewBox="0 0 24 24" fill="none">
+                          <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      {% when 'leaf' %}
+                        <svg viewBox="0 0 24 24" fill="none">
+                          <path d="M20 4s-7 0-11 4-4 11-4 11 7 0 11-4 4-11 4-11Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                          <path d="M9 15c2-2 6-6 11-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                      {% when 'heart' %}
+                        <svg viewBox="0 0 24 24" fill="none">
+                          <path d="M12 21s-7-4.5-9.5-8.5C.7 9.4 2.5 6 6 6c2 0 3.2 1.1 4 2.1C10.8 7.1 12 6 14 6c3.5 0 5.3 3.4 3.5 6.5C19 16.5 12 21 12 21Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                        </svg>
+                      {% else %}
+                        <svg viewBox="0 0 24 24" fill="none">
+                          <path d="M12 2v20M2 12h20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    {% endcase %}
+                  {% endif %}
+                </div>
+                <div class="rr-howto__card-text">
+                  {% if block.settings.title != blank %}
+                    <h3 class="rr-howto__card-title">{{ block.settings.title | escape }}</h3>
+                  {% endif %}
+                  {% if block.settings.text != blank %}
+                    <p class="rr-howto__card-body">{{ block.settings.text }}</p>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+          {% if section.blocks.size > 1 %}
+          <div class="rr-howto__dots" id="rr-howto-dots-{{ section.id }}" aria-label="Card navigation">
+            {% for block in section.blocks %}
+              <button
+                class="rr-howto__dot {% if forloop.first %}rr-howto__dot--active{% endif %}"
+                data-index="{{ forloop.index0 }}"
+                aria-label="Go to card {{ forloop.index }}"
+              ></button>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "How to Use Split",
+  "settings": [
+    { "type": "header", "content": "Header" },
+    { "type": "text", "id": "heading_before", "label": "Heading (before italic)", "default": "How to Use " },
+    { "type": "text", "id": "heading_emphasis", "label": "Heading (italic word)", "default": "Root Reboot" },
+    { "type": "richtext", "id": "subtext", "label": "Subtitle", "default": "<p>Root Reboot began a tradition of intentional hair oiling, a ritual that nourishes hair naturally.</p>" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Add Root Reboot to Your Routine" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "image_picker", "id": "image", "label": "Left image" },
+    { "type": "header", "content": "Colors" },
+    { "type": "color", "id": "bg_color", "label": "Section background", "default": "#FFFFFF" },
+    { "type": "color", "id": "title_color", "label": "Title color", "default": "#1E293B" },
+    { "type": "color", "id": "muted_color", "label": "Muted text color", "default": "#5A667A" },
+    { "type": "color", "id": "accent_color", "label": "Icon color", "default": "#D97B7B" },
+    { "type": "color", "id": "card_bg", "label": "Card background", "default": "#F9F8F3" },
+    { "type": "color", "id": "button_bg", "label": "Button background", "default": "#912643" },
+    { "type": "color", "id": "button_text_color", "label": "Button text color", "default": "#FFFFFF" },
+    { "type": "header", "content": "Typography" },
+    { "type": "select", "id": "heading_font", "label": "Heading font", "options": [
+      { "value": "Playfair Display", "label": "Playfair Display (Serif)" },
+      { "value": "Georgia", "label": "Georgia (Serif)" },
+      { "value": "Figtree", "label": "Figtree (Sans-serif)" }
+    ], "default": "Playfair Display" },
+    { "type": "range", "id": "heading_size", "label": "Heading size", "min": 24, "max": 56, "step": 2, "unit": "px", "default": 42 },
+    { "type": "select", "id": "body_font", "label": "Body font", "options": [
+      { "value": "Figtree", "label": "Figtree (Sans-serif)" },
+      { "value": "Arial", "label": "Arial (Sans-serif)" },
+      { "value": "Helvetica", "label": "Helvetica (Sans-serif)" }
+    ], "default": "Figtree" }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step Card",
+      "settings": [
+        { "type": "image_picker", "id": "custom_icon", "label": "Custom icon (optional)" },
+        { "type": "select", "id": "icon", "label": "Icon", "default": "drops", "options": [
+          { "value": "drops", "label": "Drops" },
+          { "value": "clock", "label": "Clock" },
+          { "value": "refresh", "label": "Refresh" },
+          { "value": "leaf", "label": "Leaf" },
+          { "value": "heart", "label": "Heart" }
+        ]},
+        { "type": "text", "id": "title", "label": "Title", "default": "Apply to Scalp" },
+        { "type": "richtext", "id": "text", "label": "Description", "default": "<p>Massage a small amount into your scalp using gentle circular motions.</p>" }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "How to Use Split",
+      "blocks": [
+        { "type": "step", "settings": { "icon": "drops", "title": "Apply to Scalp", "text": "<p>Massage a small amount into your scalp using gentle circular motions.</p>" } },
+        { "type": "step", "settings": { "icon": "clock", "title": "Let It Absorb", "text": "<p>Leave on for at least 30–60 minutes, or overnight for deeper nourishment.</p>" } },
+        { "type": "step", "settings": { "icon": "refresh", "title": "Wash & Repeat", "text": "<p>Rinse thoroughly and use consistently 2–3 times a week for best results.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
